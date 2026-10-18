@@ -58,6 +58,12 @@ input[type=range]{width:100%;margin:8px 0 2px;accent-color:var(--tw)}
 .legend{font-size:11px;display:flex;gap:12px;margin-top:4px;color:var(--text2)}
 .note{font-size:12px;color:var(--text2);line-height:1.6;margin-top:8px}
 .err{color:var(--red);font-size:14px;padding:20px 4px}
+details.help{margin-top:12px;border-top:.5px solid var(--line);padding-top:10px}
+details.help>summary{list-style:none;cursor:pointer;font-size:13px;color:var(--blue);display:flex;justify-content:space-between}
+details.help>summary::-webkit-details-marker{display:none}
+details.help .chev{transition:transform .2s}details.help[open] .chev{transform:rotate(90deg)}
+details.help dl{margin:8px 0 0;font-size:13px;line-height:1.6}
+details.help dt{font-weight:600;margin-top:10px}details.help dd{margin:2px 0 0;color:var(--text2)}
 details.fold{margin-top:10px}
 details.fold>summary{list-style:none;cursor:pointer;background:var(--card);border:.5px solid var(--line);border-radius:14px;padding:14px 16px;display:flex;justify-content:space-between;align-items:center}
 details.fold>summary::-webkit-details-marker{display:none}
@@ -167,6 +173,26 @@ function saleLine(D,date){
     ${fmt(lastSale(D.tw,date),"台股",true)}${fmt(lastSale(D.us,date),"美股",false)}</div>`;
 }
 
+const HELP_TW=[
+ ["長條代表什麼","每項指標換算成 0–100 的恐慌程度：一半看近 2 年的相對位置，一半看長期常態。越長越恐慌，60 以上變橘色、80 以上變紅色。右邊是實際數值。"],
+ ["融資維持率","散戶借錢買股的擔保比率（股票市值 ÷ 借款）。股價下跌就會降低，個股低於 130% 會被追繳，補不足就被強制賣出（斷頭）。越低越恐慌，大盤跌到 150% 以下壓力就很明顯。"],
+ ["融資 10 日","融資餘額 10 天來的變化。快速減少代表散戶被迫或主動退場，也就是俗稱的「洗融資」。減少越多越恐慌；反過來大增則代表槓桿過熱。"],
+ ["臺指 VIX","期交所用台指選擇權算出的預期波動率，台灣版的恐慌指數。越高代表市場預期未來波動越大。"],
+ ["外資期貨","外資台指期貨淨部位 10 天來的變化。負值代表外資加碼空單（看空或為現貨避險），空單增加越快越恐慌。"],
+ ["跌破季線","上市普通股中，收盤價低於 60 日均線的比例。比例越高代表跌勢越全面，而不只是少數權值股在跌。"],
+ ["退潮訊號","近 20 天分數曾到 75 以上才會啟動，檢查恐慌是否開始消退：融資維持率止跌回升、跌破季線的股票變少、臺指 VIX 從高點回落。全部成立才是「可以進場搶購」。"]];
+const HELP_US=[
+ ["長條代表什麼","同台股：0–100 的恐慌程度，相對位置與長期常態各半。"],
+ ["HY 利差","高收益債（垃圾債）比美國公債多要求的利息。企業倒債風險升高時會擴大，常比股市更早反映壞消息。越高越恐慌。"],
+ ["IG 利差","投資等級債（體質好的大企業）的利差。連好公司的利差都擴大，代表恐慌已經擴散成系統性問題。"],
+ ["JNK/IEF","垃圾債 ETF 除以中期美債 ETF 的比值。比值下跌代表資金逃離風險資產；長條看的是從一年高點回落了多少。"],
+ ["VIX","用標普 500 選擇權算出的未來 30 天預期波動，俗稱恐慌指數。20 左右是常態，30 以上就是明顯恐慌。"],
+ ["期限結構","VIX ÷ VIX3M（未來 3 個月的預期波動）。平常小於 1；大於 1 代表短期恐慌超過長期擔憂，是急性恐慌的特徵。回到 1 以下是退潮訊號之一。"],
+ ["MOVE","美債市場的 VIX，用美債選擇權算出的預期波動率。美債是全球資產定價的基準，債市一亂，股市也很難穩。100 左右是常態，120 以上偏高。"],
+ ["STLFSI","聖路易聯準會編製的金融壓力指數，綜合 18 項利率、利差與波動率數據。0 代表平均，大於 0 壓力高於常態，大於 1 就很明顯。只做交叉驗證，不計入分數。"],
+ ["退潮訊號","近 20 天曾出現真正恐慌（分數 ≥80、VIX ≥20 且期限結構 ≥1）才會啟動：期限結構回到 1 以下，加上信用利差開始收斂。"]];
+const helpBox=list=>`<details class="help"><summary><span>指標說明</span><span class="chev">▶</span></summary><dl>${list.map(([k,v])=>`<dt>${k}</dt><dd>${v}</dd>`).join("")}</dl></details>`;
+
 function dayCard(D,i,{compact=false}={}){
   const tw=D.tw,t=tw[i];
   const usRow=D.us.filter(u=>u.date<=t.date).slice(-1)[0];
@@ -194,12 +220,12 @@ function dayCard(D,i,{compact=false}={}){
   html+=`
   <div class="card"><div class="row"><span class="h">台股指標</span><span class="tiny">百分位 / 數值　${t.date}</span></div>
     <div class="ind">${indRows(twInd(tw,i))}</div>
-    <div class="sep"><div class="h" style="font-size:14px">台股退潮訊號：${twc.title}</div><div class="checks">${twc.html}</div></div></div>`;
+    <div class="sep"><div class="h" style="font-size:14px">台股退潮訊號：${twc.title}</div><div class="checks">${twc.html}</div></div>${helpBox(HELP_TW)}</div>`;
   if(usRow)html+=`
   <div class="card"><div class="row"><span class="h">美股指標</span><span class="tiny">${usRow.date}</span></div>
     <div class="ind">${indRows(usInd(usRow))}</div>
     <div class="sep"><div class="h" style="font-size:14px">美股退潮訊號：${usc.title}</div><div class="checks">${usc.html}</div></div>
-    <div class="sep row" style="font-size:13px"><span class="muted" style="font-size:13px">交叉驗證 STLFSI</span><span>${fx(usRow.raw.STLFSI,2)} ${usRow.raw.STLFSI==null?"":usRow.raw.STLFSI>1?"偏高":usRow.raw.STLFSI>0?"略高":"正常"}</span></div></div>`;
+    <div class="sep row" style="font-size:13px"><span class="muted" style="font-size:13px">交叉驗證 STLFSI</span><span>${fx(usRow.raw.STLFSI,2)} ${usRow.raw.STLFSI==null?"":usRow.raw.STLFSI>1?"偏高":usRow.raw.STLFSI>0?"略高":"正常"}</span></div>${helpBox(HELP_US)}</div>`;
   return html;
 }
 
