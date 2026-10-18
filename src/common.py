@@ -14,7 +14,7 @@ UA = {"User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit
                     "(KHTML, like Gecko) Chrome/124.0 Safari/537.36"}
 
 
-def get(url, method="GET", retries=4, wait=3.0, timeout=40, **kw):
+def get(url, method="GET", retries=4, wait=2.2, timeout=40, **kw):
     """帶重試的請求；每次請求後固定等待，避免被證交所封鎖"""
     last = None
     for i in range(retries):

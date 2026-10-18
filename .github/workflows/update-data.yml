@@ -21,27 +21,26 @@ jobs:
           python-version: "3.12"
       - run: pip install pandas requests yfinance
       - name: 美股
-        run: python src/fetch_us.py 2>&1 | tee logs_us.txt
+        run: |
+          set -o pipefail
+          mkdir -p logs
+          python src/fetch_us.py 2>&1 | tee logs/us.txt
         env:
           FRED_API_KEY: ${{ secrets.FRED_API_KEY }}
       - name: 台股
         if: always()
-        run: python src/fetch_tw.py 2>&1 | tee logs_tw.txt
+        run: |
+          set -o pipefail
+          python src/fetch_tw.py 2>&1 | tee logs/tw.txt
         env:
           MAX_MINUTES: "300"
+      - name: 先存資料
+        if: always()
+        run: bash .github/save.sh "更新資料"
       - name: 計算分數
-        if: always()
-        run: python src/score.py 2>&1 | tee logs_score.txt
-      - name: 存回專案
-        if: always()
         run: |
-          mkdir -p logs && mv logs_*.txt logs/ 2>/dev/null || true
-          git config user.name "github-actions[bot]"
-          git config user.email "github-actions[bot]@users.noreply.github.com"
-          mkdir -p /tmp/keep && cp -r --parents data logs docs /tmp/keep/ 2>/dev/null || true
-          git fetch -q origin main && git reset -q --hard origin/main
-          cp -r /tmp/keep/. . 
-          git add data logs docs
-          git commit -q -m "自動存檔 [skip ci]" || echo "無變更"
-          git push -q
-
+          set -o pipefail
+          python src/score.py 2>&1 | tee logs/score.txt
+      - name: 存分數與網頁資料
+        if: always()
+        run: bash .github/save.sh "更新分數"
