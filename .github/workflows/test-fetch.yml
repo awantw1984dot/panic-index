@@ -1,10 +1,6 @@
 name: 抓取程式測試
 
 on:
-  push:
-    paths:
-      - "src/**"
-      - ".github/workflows/test-fetch.yml"
   workflow_dispatch:
 
 permissions:

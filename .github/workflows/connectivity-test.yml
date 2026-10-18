@@ -1,10 +1,6 @@
 name: 連線測試
 
 on:
-  push:
-    paths:
-      - "tests/**"
-      - ".github/workflows/connectivity-test.yml"
   workflow_dispatch:
 
 permissions:
