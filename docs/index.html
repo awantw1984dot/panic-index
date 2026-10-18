@@ -145,6 +145,28 @@ function lineChart(series,{h=90,markIdx=null,band=true,index=null}={}){
   return s+"</svg>";
 }
 
+function lastSale(arr,uptoDate){
+  // 最近一次特賣會（連續 ≥80 的區段）的最高分那天
+  const a=arr.filter(r=>r.score!=null&&r.date<=uptoDate);
+  let k=a.length-1; while(k>=0&&a[k].score<80)k--;
+  if(k<0)return null;
+  // 往前找同一波：中間短暫跌破 80 不超過 10 個交易日，視為同一次特賣會
+  let j=k,gap=0; for(let m=k-1;m>=0;m--){ if(a[m].score>=80){j=m;gap=0} else if(++gap>10)break }
+  let best=a[j]; for(let m=j;m<=k;m++)if(a[m].score>best.score)best=a[m];
+  return {...best,ongoing:k===a.length-1};
+}
+function saleLine(D,date){
+  const fmt=(x,name,withIdx)=>{
+    if(!x)return `<div><span class="muted" style="font-size:13px">${name}</span>　近 2 年沒有</div>`;
+    const days=Math.round((new Date(date)-new Date(x.date))/864e5);
+    const ago=x.ongoing?'<b style="color:var(--red)">進行中</b>':`${days} 天前`;
+    const ix=withIdx&&x.raw&&x.raw.TAIEX?`・加權 ${Math.round(x.raw.TAIEX).toLocaleString()}`:"";
+    return `<div class="row" style="font-size:13px;padding:2px 0"><span><span class="muted" style="font-size:13px">${name}</span>　${x.date.replace(/-/g,"/")}　<b>${Math.round(x.score)}</b> 分${ix}</span><span class="tiny">${ago}</span></div>`;
+  };
+  return `<div class="card" style="padding:10px 16px"><div class="tiny" style="margin-bottom:2px">最近一次特賣會（那一波的最高分）</div>
+    ${fmt(lastSale(D.tw,date),"台股",true)}${fmt(lastSale(D.us,date),"美股",false)}</div>`;
+}
+
 function dayCard(D,i,{compact=false}={}){
   const tw=D.tw,t=tw[i];
   const usRow=D.us.filter(u=>u.date<=t.date).slice(-1)[0];
@@ -162,6 +184,7 @@ function dayCard(D,i,{compact=false}={}){
       <span class="pill z-${zone(t.us_score)}">${zone(t.us_score)}</span>
       <div class="tiny" style="margin-top:6px">${usRow?"美股資料 "+usRow.date.slice(5):""}</div></div>
   </div>
+  ${compact?"":saleLine(D,t.date)}
   <div class="card"><div class="row"><span class="h">目前狀態：${q||"—"}</span><span class="tiny">≥60 視為恐慌側</span></div>
     <div class="quad"><span></span><span class="tiny">台股平靜</span><span class="tiny">台股恐慌</span>
       <span class="v">美股<br>平靜</span>${cell("正常環境")}${cell("本土事件")}
