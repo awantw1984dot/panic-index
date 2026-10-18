@@ -307,7 +307,7 @@ function guide(D){
       <div style="font-size:13px;line-height:1.55">${t}<div class="tiny">台股 ${ft[i]}%・美股 ${fu[i]}% 的日子</div></div></div>`).join("")}
     <div class="sep"><div class="h" style="font-size:14px;margin-bottom:4px">歷史參考：股災時最高到幾分</div>
       ${EVENTS.map(e=>`<div style="font-size:13px;padding:4px 0"><div>${e.name}</div><div class="muted" style="font-size:13px;font-variant-numeric:tabular-nums">台股 ${peak(D.tw,e)}　美股 ${peak(D.us,e)}</div></div>`).join("")}
-      <div class="note">分數是相對過去兩年＋長期常態的綜合評估，不是跌幅。到達特賣會不代表已經最便宜，真正的進場訊號是「退潮訊號」全部觸發。</div></div>
+      <div class="note">分數是相對過去兩年＋長期常態的綜合評估，不是跌幅。到達特賣會不代表已經最便宜，真正的進場訊號是「退潮訊號」全部觸發。<br>「▲ 升溫中」：分數 5 個交易日內上升 15 分以上（分數在 40～80 之間），代表恐慌正在快速累積，即使還沒到開始打折也值得留意。</div></div>
   </div></div>`;
   return box;
 }

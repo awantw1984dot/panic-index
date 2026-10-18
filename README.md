@@ -41,4 +41,5 @@
 - [x] 股災回放（2025/4、2026/7）
 - [x] 每日卡片網頁（docs/，需在 Settings → Pages 開啟 main /docs）
 - [x] 每日排程：台北 07:30、21:30
-- [ ] 捷徑通知（讀取 docs/status.json）
+- [x] 捷徑通知（讀取 docs/status.json，與上次狀態比較才通知）
+- [x] 升溫警示（5 日 +15 分）、未來 7 天重要事件（CPI、PPI、非農、FOMC）
