@@ -1,10 +1,7 @@
-202310 logdata 200 402 非ZIP
-202310 logdata/2023 200 402 非ZIP
-202407 logdata 200 402 非ZIP
-202407 logdata/2024 200 402 非ZIP
-202504 logdata 200 402 非ZIP
-202504 logdata/2025 200 402 非ZIP
-202601 logdata 200 402 非ZIP
-202601 logdata/2026 200 402 非ZIP
-202606 logdata 200 402 非ZIP
-202606 logdata/2026 200 402 非ZIP
+  VIX 以 CBOE 補值（yfinance 不完整）
+補回筆數 30 / 30，最大差異 0.0
+Ticker        VIX      VIX3M
+Date                        
+2026-10-14  16.87  18.790001
+2026-10-15  16.46  18.490000
+2026-10-16  19.99  20.500000
