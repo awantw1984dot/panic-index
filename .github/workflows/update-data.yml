@@ -29,16 +29,19 @@ jobs:
         run: python src/fetch_tw.py 2>&1 | tee logs_tw.txt
         env:
           MAX_MINUTES: "300"
+      - name: 計算分數
+        if: always()
+        run: python src/score.py 2>&1 | tee logs_score.txt
       - name: 存回專案
         if: always()
         run: |
           mkdir -p logs && mv logs_*.txt logs/ 2>/dev/null || true
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          mkdir -p /tmp/keep && cp -r --parents data logs /tmp/keep/ 2>/dev/null || true
+          mkdir -p /tmp/keep && cp -r --parents data logs site /tmp/keep/ 2>/dev/null || true
           git fetch -q origin main && git reset -q --hard origin/main
           cp -r /tmp/keep/. . 
-          git add data logs
+          git add data logs site
           git commit -q -m "自動存檔 [skip ci]" || echo "無變更"
           git push -q
 
