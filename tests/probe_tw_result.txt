@@ -1,0 +1,156 @@
+
+##### MI_MARGN MS
+頂層鍵： ['stat', 'date', 'tables']
+-- 表：115年07月17日 信用交易統計｜欄位：['項目', '買進', '賣出', '現金(券)償還', '前日餘額', '今日餘額']
+    ['融資(交易單位)', '522,741', '674,802', '12,642', '9,513,578', '9,348,875']
+    ['融券(交易單位)', '34,788', '98,198', '3,732', '176,622', '236,300']
+    ['融資金額(仟元)', '29,661,978', '54,919,116', '2,356,341', '615,575,992', '587,962,513']
+   （共 3 列）
+-- 表：None｜欄位：None
+   （共 0 列）
+
+##### MI_MARGN ALL
+頂層鍵： ['stat', 'date', 'tables']
+-- 表：115年07月17日 信用交易統計｜欄位：['項目', '買進', '賣出', '現金(券)償還', '前日餘額', '今日餘額']
+    ['融資(交易單位)', '522,741', '674,802', '12,642', '9,513,578', '9,348,875']
+    ['融券(交易單位)', '34,788', '98,198', '3,732', '176,622', '236,300']
+    ['融資金額(仟元)', '29,661,978', '54,919,116', '2,356,341', '615,575,992', '587,962,513']
+   （共 3 列）
+-- 表：115年07月17日 融資融券彙總 (全部)｜欄位：['代號', '名稱', '買進', '賣出', '現金償還', '前日餘額', '今日餘額', '次一營業日限額', '買進', '賣出', '現券償還', '前日餘額', '今日餘額', '次一營業日限額', '資券互抵', '註記']
+    ['00400A', '主動國泰動能高息', '630', '491', '110', '11,809', '11,838', '480,035', '0', '3', '0', '3', '6', '480,035', '3', ' ']
+    ['00401A', '主動摩根台灣鑫收', '43', '22', '0', '1,109', '1,130', '58,348', '0', '0', '0', '2', '2', '58,348', '1', ' ']
+    ['00402A', '主動安聯美國科技', '113', '772', '0', '3,144', '2,485', '186,781', '0', '0', '0', '0', '0', '186,781', '0', ' ']
+   （共 1284 列）
+
+##### MI_INDEX ALLBUT0999
+頂層鍵： ['tables', 'type', 'params', 'stat', 'date']
+-- 表：115年07月17日 價格指數(臺灣證券交易所)｜欄位：['指數', '收盤指數', '漲跌(+/-)', '漲跌點數', '漲跌百分比(%)', '特殊處理註記']
+    ['寶島股價指數', '47,398.39', "<p style ='color:green'>-</p>", '3,301.58', '-6.51', '']
+    ['發行量加權股價指數', '42,671.27', "<p style ='color:green'>-</p>", '2,953.71', '-6.47', '']
+    ['臺灣公司治理100指數', '26,486.88', "<p style ='color:green'>-</p>", '1,846.69', '-6.52', '']
+   （共 56 列）
+-- 表：價格指數(跨市場)｜欄位：['指數', '收盤指數', '漲跌(+/-)', '漲跌點數', '漲跌百分比(%)', '特殊處理註記']
+    ['臺灣生技指數', '4,128.26', "<p style ='color:green'>-</p>", '214.99', '-4.95', '']
+    ['臺灣中小型公司治理指數', '18,985.58', "<p style ='color:green'>-</p>", '635.78', '-3.24', '']
+    ['臺灣IPO指數', '8,821.68', "<p style ='color:green'>-</p>", '698.93', '-7.34', '']
+   （共 47 列）
+-- 表：價格指數(臺灣指數公司)｜欄位：['指數', '收盤指數', '漲跌(+/-)', '漲跌點數', '漲跌百分比(%)', '特殊處理註記']
+    ['金融類日報酬兩倍指數', '95,436.55', "<p style ='color:green'>-</p>", '1,639.00', '-1.69', '']
+    ['金融類日報酬反向一倍指數', '2,258.53', "<p style ='color:red'>+</p>", '18.91', '0.84', '']
+    ['漲升股利150指數', '20,206.97', "<p style ='color:green'>-</p>", '1,196.24', '-5.59', '']
+   （共 35 列）
+-- 表：報酬指數(臺灣證券交易所)｜欄位：['報酬指數', '收盤指數', '漲跌(+/-)', '漲跌點數', '漲跌百分比(%)', '特殊處理註記']
+    ['寶島股價報酬指數', '73,403.07', "<p style ='color:green'>-</p>", '5,104.29', '-6.50', '']
+    ['發行量加權股價報酬指數', '98,228.75', "<p style ='color:green'>-</p>", '6,789.10', '-6.46', '']
+    ['臺灣公司治理100報酬指數', '40,346.30', "<p style ='color:green'>-</p>", '2,809.20', '-6.51', '']
+   （共 47 列）
+-- 表：報酬指數(跨市場)｜欄位：['報酬指數', '收盤指數', '漲跌(+/-)', '漲跌點數', '漲跌百分比(%)', '特殊處理註記']
+    ['臺灣生技報酬指數', '4,822.93', "<p style ='color:green'>-</p>", '249.46', '-4.92', '']
+    ['臺灣中小型公司治理報酬指數', '28,111.44', "<p style ='color:green'>-</p>", '926.19', '-3.19', '']
+    ['臺灣IPO報酬指數', '10,965.72', "<p style ='color:green'>-</p>", '868.80', '-7.34', '']
+   （共 48 列）
+-- 表：報酬指數(臺灣指數公司)｜欄位：['報酬指數', '收盤指數', '漲跌(+/-)', '漲跌點數', '漲跌百分比(%)', '特殊處理註記']
+    ['漲升股利150報酬指數', '31,580.20', "<p style ='color:green'>-</p>", '1,866.06', '-5.58', '']
+    ['藍籌30報酬指數', '34,845.18', "<p style ='color:green'>-</p>", '2,679.16', '-7.14', '']
+    ['工業菁英30報酬指數', '32,580.45', "<p style ='color:green'>-</p>", '2,486.45', '-7.09', '']
+   （共 34 列）
+-- 表：115年07月17日 大盤統計資訊｜欄位：['成交統計', '成交金額(元)', '成交股數(股)', '成交筆數']
+    ['1.一般股票', '1,112,606,276,770', '6,545,776,248', '5,907,581']
+    ['2.台灣存託憑證', '286,543,822', '37,452,249', '8,980']
+    ['3.受益憑證', '0', '0', '0']
+   （共 17 列）
+-- 表：漲跌證券數合計｜欄位：['類型', '整體市場', '股票']
+    ['上漲(漲停)', '1,227(9)', '87(2)']
+    ['下跌(跌停)', '10,309(1,317)', '960(79)']
+    ['持平', '194', '23']
+   （共 5 列）
+-- 表：115年07月17日 每日收盤行情(全部(不含權證、牛熊證、可展延牛熊證))｜欄位：['證券代號', '證券名稱', '成交股數', '成交筆數', '成交金額', '開盤價', '最高價', '最低價', '收盤價', '漲跌(+/-)', '漲跌價差', '最後揭示買價', '最後揭示買量', '最後揭示賣價', '最後揭示賣量', '本益比']
+    ['00400A', '主動國泰動能高息', '84,849,085', '28,958', '1,122,046,948', '13.50', '13.54', '12.99', '12.99', '<p style= color:green>-</p>', '1.00', '12.98', '505', '12.99', '616', '0.00']
+    ['00401A', '主動摩根台灣鑫收', '10,441,738', '1,878', '132,247,089', '13.06', '13.06', '12.49', '12.50', '<p style= color:green>-</p>', '0.82', '12.49', '1', '12.50', '2', '0.00']
+    ['00402A', '主動安聯美國科技', '11,197,990', '4,023', '106,447,998', '9.59', '9.61', '9.43', '9.43', '<p style= color:green>-</p>', '0.44', '9.42', '1,340', '9.43', '27', '0.00']
+   （共 1371 列）
+-- 表：None｜欄位：None
+   （共 0 列）
+
+##### FMTQIK 月成交與指數
+頂層鍵： ['stat', 'date', 'title', 'hints', 'fields', 'data', 'notes']
+欄位： ['日期', '成交股數', '成交金額', '成交筆數', '發行量加權股價指數', '漲跌點數']
+    ['115/07/01', '14,683,404,939', '1,367,817,795,171', '6,457,744', '47,018.99', '893.08']
+    ['115/07/02', '11,740,053,658', '1,083,583,417,368', '5,564,334', '46,744.16', '-274.83']
+    ['115/07/03', '12,189,040,098', '1,078,028,137,102', '5,526,867', '46,780.62', '36.46']
+   （共 22 列）
+
+##### 期交所 三大法人期貨區間下載 TXF
+HTTP 200 編碼 big5 長度 7387
+日期,商品名稱,身份別,多方交易口數,多方交易契約金額(千元),空方交易口數,空方交易契約金額(千元),多空交易口數淨額,多空交易契約金額淨額(千元),多方未平倉口數,多方未平倉契約金額(千元),空方未平倉口數,空方未平倉契約金額(千元),多空未平倉口數淨額,多空未平倉契約金額淨額(千元)
+2026/07/01,臺股期貨,自營商,6418,60587881,6351,59934030,67,653852,6129,58029771,4537,42959343,1592,15070428
+2026/07/01,臺股期貨,投信,1119,10599548,548,5181909,571,5417639,73084,690222783,5890,55660491,67194,634562292
+2026/07/01,臺股期貨,外資及陸資,54357,512484562,55445,522765302,-1088,-10280740,5526,52203659,89694,847232264,-84168,-795028605
+2026/07/02,臺股期貨,自營商,7514,70098107,5472,51144087,2042,18954019,8087,75529454,4404,41166023,3683,34363431
+2026/07/02,臺股期貨,投信,153,1428155,937,8750214,-784,-7322059,72344,674335777,5934,55346320,66410,618989457
+2026/07/02,臺股期貨,外資及陸資,72116,673218146,72383,675942850,-267,-2724705,4770,44480749,89257,832138161,-84487,-787657412
+2026/07/03,臺股期貨,自營商,6902,63961116,7547,70285380,-645,-6324264,7819,73643562,4748,44743825,3071,28899737
+
+##### 期交所 OpenAPI swagger 中與 VIX / 三大法人 相關的路徑
+/MarketDataOfMajorInstitutionalTradersGeneralBytheDate ｜ 三大法人-總表-依日期
+/MarketDataOfMajorInstitutionalTradersGeneralBytheWeek ｜ 三大法人-總表-依週別
+/MarketDataOfMajorInstitutionalTradersDividedByFuturesAndOptionsBytheDate ｜ 三大法人-區分期貨與選擇權二類-依日期
+/MarketDataOfMajorInstitutionalTradersDividedByFuturesAndOptionsBytheWeek ｜ 三大法人-區分期貨與選擇權二類-依週別
+/MarketDataOfMajorInstitutionalTradersDetailsOfFuturesContractsBytheDate ｜ 三大法人-區分各期貨契約-依日期
+/MarketDataOfMajorInstitutionalTradersDetailsOfFuturesContractsBytheWeek ｜ 三大法人-區分各期貨契約-依週別
+/MarketDataOfMajorInstitutionalTradersDetailsOfOptionsContractsBytheDate ｜ 三大法人-區分各選擇權契約-依日期
+/MarketDataOfMajorInstitutionalTradersDetailsOfOptionsContractsBytheWeek ｜ 三大法人-區分各選擇權契約-依週別
+/MarketDataOfMajorInstitutionalTradersDetailsOfCallsAndPutsBytheDate ｜ 三大法人-選擇權買賣權分計-依日期
+/MarketDataOfMajorInstitutionalTradersDetailsOfCallsAndPutsBytheWeek ｜ 三大法人-選擇權買賣權分計-依週別
+
+##### 期交所 vixMinNew 頁面中的連結
+   /cht/../file/taifex/CHINESE/12/LEI.pdf
+   /cht/../file/taifex/CHINESE/7/trade_volume.ods
+   /cht/../file/taifex/CHINESE/9/期交所各部門對外窗口名單.pdf
+   /cht/../file/taifex/CHINESE/9/臺灣期貨交易所金融市場基本架構資訊揭露報告.pdf
+   /cht/../file/taifex/eng/eng9/Eligible Foreign Exchanges and Contracts Granted by the SFB.ods
+   /cht/5/qDFilesCht
+   /cht/7/vixDaily3MNew
+   /cht/7/vixMin3MNew
+   /cht/7/vixMinNew
+   /cht/7/vixQA
+   /cht/8/spanRiskParameterFile
+   https://activity.taifex.com.tw/file/taifex/event/cht/QCCP/index.html
+   https://activity.taifex.com.tw/file/taifex/event/cht/csr/index.html
+   https://activity.taifex.com.tw/file/taifex/event/cht/eLearnPlatform/index_eLearn.html
+   https://activity.taifex.com.tw/file/taifex/event/cht/fut_anti_fraud/index.html
+   https://activity.taifex.com.tw/file/taifex/event/cht/investmentRisk/index.html
+   https://activity.taifex.com.tw/file/taifex/event/cht/newrule2026q2/index.html
+   https://activity.taifex.com.tw/file/taifex/event/cht/sGold/index.html
+   https://activity.taifex.com.tw/file/taifex/event/cht/stc_weekly/index.html
+   https://learn.taifex.com.tw/CompanyProfile
+   https://www.facebook.com/sharer/sharer.php?u=https://www.taifex.com.tw/cht/7/vixMinNew
+   https://www.taifex.com.tw/file/taifex/CHINESE/11/attach/20250319_應集中新聞稿.pdf
+   https://www.taifex.com.tw/file/taifex/CHINESE/WBS-Cht.pdf
+   https://www.taifex.com.tw/file/taifex/CHINESE/bim.pdf
+   https://www.taifex.com.tw/file/taifex/CHINESE/pic_banners/header/165儀表板-new1.png
+   https://www.taifex.com.tw/file/taifex/CHINESE/pic_banners/header/202502_anti_fraud_banner.jpg
+   https://www.taifex.com.tw/file/taifex/CHINESE/pic_banners/header/IRS_20250701_Banner.jpg
+   https://www.taifex.com.tw/file/taifex/CHINESE/pic_banners/header/anti_fraud_1000154_01.jpg
+   https://www.taifex.com.tw/file/taifex/CHINESE/pic_banners/header/anti_fraud_1000154_02.jpg
+   https://www.taifex.com.tw/file/taifex/CHINESE/pic_banners/header/anti_fraud_1000154_03.jpg
+   https://www.taifex.com.tw/file/taifex/CHINESE/pic_banners/header/antifraud_banner.png
+   https://www.taifex.com.tw/file/taifex/CHINESE/pic_banners/header/ds_gdf_xif_ch_banner.jpg
+   https://www.taifex.com.tw/file/taifex/CHINESE/pic_banners/header/esg_banner.jpg
+   https://www.taifex.com.tw/file/taifex/CHINESE/pic_banners/header/fx_hedging_ch_banner.jpg
+   https://www.taifex.com.tw/file/taifex/CHINESE/pic_banners/header/infohub2025_banner_ch.jpg
+   https://www.taifex.com.tw/file/taifex/CHINESE/pic_banners/header/newrule2026q2_banner_ch.jpg
+   https://www.taifex.com.tw/file/taifex/CHINESE/pic_banners/header/otc_IFRS.jpg
+   https://www.taifex.com.tw/file/taifex/CHINESE/pic_banners/header/rm_banner.png
+   https://www.taifex.com.tw/file/taifex/CHINESE/pic_banners/header/try9_banner.png
+   https://www.taifex.com.tw/file/taifex/CHINESE/pic_banners/header/wsso_banner_cn.jpg
+   https://www.taifex.com.tw/file/taifex/CHINESE/pic_banners/header/反詐騙專區Banner.jpg
+   https://www.taifex.com.tw/file/taifex/CHINESE/pic_banners/header/重陽節banner_Ｂ.jpg
+   https://www.taifex.com.tw/file/taifex/CHINESE/pimp.pdf
+   https://www.taifex.com.tw/file/taifex/CHINESE/工作場所性騷擾防治措施、申訴及懲處辦法.pdf
+   https://www.taifex.com.tw/file/taifex/CHINESE/工作場所性騷擾防治措施辦法.pdf
+   https://www.taifex.com.tw/file/taifex/event/cht/FX_Hedging/index.html
+   https://www.taifex.com.tw/file/taifex/event/cht/anti_fraud/index.html
+  FORM <form name="myHeaderform" id="myHeaderform" method="post">
+  FORM <form name="myHeaderform" id="myHeaderform" method="post">
+  FORM <form name="myHeaderform" id="mMyHeaderform" method="post">
