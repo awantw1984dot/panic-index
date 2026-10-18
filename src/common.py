@@ -2,6 +2,7 @@
 """共用工具：HTTP 請求、CSV 合併、日期轉換"""
 import datetime as dt
 import os
+import re
 import time
 
 import pandas as pd
@@ -26,7 +27,7 @@ def get(url, method="GET", retries=4, wait=2.2, timeout=40, **kw):
                 return r
             last = f"HTTP {r.status_code}"
         except Exception as e:
-            last = f"{type(e).__name__}: {e}"
+            last = re.sub(r"api_key=[^&\s'\"]+", "api_key=***", f"{type(e).__name__}: {e}")   # 避免金鑰進日誌
             time.sleep(wait)
         time.sleep(15 * (i + 1))
     raise RuntimeError(f"請求失敗 {url}：{last}")

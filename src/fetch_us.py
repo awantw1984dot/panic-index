@@ -13,6 +13,7 @@ from common import DATA, START, get, save_merge
 YF = {"^VIX": "VIX", "^VIX3M": "VIX3M", "^MOVE": "MOVE", "JNK": "JNK", "IEF": "IEF",
       "^GSPC": "SPX", "^SOX": "SOX"}
 FRED = {"BAMLH0A0HYM2": "HY_OAS", "BAMLC0A0CM": "IG_OAS", "STLFSI4": "STLFSI"}
+ICE = ["HY_OAS", "IG_OAS"]   # ICE BofA 授權：不得公開發布原始數值
 
 
 def fetch_yf():
@@ -97,9 +98,16 @@ def main():
         a = pd.DataFrame()
     a = fill_from_cboe(a)
     b = fetch_fred(key)
-    df = a.join(b, how="outer")
+    # ICE 利差（HY、IG）依授權僅供內部使用：另存 data/fred_ice.csv（不提交到公開 repo），不寫進 us_daily.csv
+    ice = b[[c for c in ICE if c in b]]
+    ice.index.name = "date"
+    ice.to_csv(os.path.join(DATA, "fred_ice.csv"), float_format="%.6g")
+    df = a.join(b.drop(columns=ICE, errors="ignore"), how="outer")
     df = df.dropna(how="all")
     df = save_merge("us_daily.csv", df)
+    if any(c in df for c in ICE):   # 移除舊檔殘留的 ICE 欄位
+        df = df.drop(columns=ICE, errors="ignore")
+        df.to_csv(os.path.join(DATA, "us_daily.csv"), float_format="%.6g")
     print(f"美股資料：{len(df)} 列，{df.index.min().date()} ～ {df.index.max().date()}")
     print("各欄最新值：")
     print(df.ffill().iloc[-1].round(3).to_string())

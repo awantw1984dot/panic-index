@@ -123,8 +123,8 @@ function twInd(tw,i){
 }
 function usInd(u){
   const r=u.raw,I=u.indicators;
-  return [["HY 利差",I["HY利差"],r.HY_OAS==null?"—":fx(r.HY_OAS,2)+"%"],
-          ["IG 利差",I["IG利差"],r.IG_OAS==null?"—":fx(r.IG_OAS,2)+"%"],
+  return [["HY 利差",I["HY利差"],"僅顯示分數"],
+          ["IG 利差",I["IG利差"],"僅顯示分數"],
           ["JNK/IEF",I["JNK/IEF回撤"],fx(r["JNK/IEF"],3)],
           ["VIX",I["VIX"],fx(r.VIX)],
           ["期限結構",I["VIX期限結構"],fx(r["VIX期限結構"],2)],

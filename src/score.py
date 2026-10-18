@@ -146,7 +146,7 @@ def score_us(us):
     out = pd.concat([score.rename("score"), g.add_prefix("組_"), c.add_prefix("指標_"), checks.add_prefix("訊號_")], axis=1)
     out["近期真恐慌"] = recent
     out["退潮"] = recent & checks.all(axis=1)
-    raw = us[["VIX", "VIX3M", "MOVE", "HY_OAS", "IG_OAS", "STLFSI", "SPX", "SOX"]].copy()
+    raw = us[["VIX", "VIX3M", "MOVE", "STLFSI", "SPX", "SOX"]].copy()   # 不含 ICE 利差原始值（授權限制）
     raw["VIX期限結構"] = term
     raw["JNK/IEF"] = ratio
     return out, raw
@@ -190,7 +190,10 @@ def quadrant(tw_s, us_s):
 
 
 def main():
-    us_out, us_raw = score_us(load_csv("us_daily.csv"))
+    us_in = load_csv("us_daily.csv").drop(columns=["HY_OAS", "IG_OAS"], errors="ignore")
+    ice = load_csv("fred_ice.csv")   # ICE 利差只存在執行環境中，不公開
+    us_in = us_in.join(ice, how="outer") if not ice.empty else us_in.reindex(columns=[*us_in.columns, "HY_OAS", "IG_OAS"])
+    us_out, us_raw = score_us(us_in)
     tw_out, tw_raw = score_tw(load_csv("tw_daily.csv"))
     us_out.to_csv(os.path.join(DATA, "scores_us.csv"), float_format="%.4g")
     tw_out.to_csv(os.path.join(DATA, "scores_tw.csv"), float_format="%.4g")
