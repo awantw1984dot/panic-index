@@ -80,7 +80,7 @@ const EVENTS=[
 function ma(arr,i,n){if(i<n-1)return null;let s=0;for(let k=i-n+1;k<=i;k++){if(arr[k]==null)return null;s+=arr[k]}return s/n}
 
 function action(t,i,tw){
-  if(t.退潮)return "可以進場搶購：台股退潮訊號 3/3 觸發，分批買進";
+  if(t.退潮)return "可以進場搶購：台股退潮訊號全部觸發，分批買進";
   const idx=tw.map(x=>x.raw.TAIEX), m=ma(idx,i,60), above=m!=null&&idx[i]>m;
   const ma60=m==null?"":(above?"TAIEX 站上 MA60":"TAIEX 跌破 MA60");
   switch(t.quadrant){
@@ -115,9 +115,9 @@ function usInd(u){
           ["MOVE",I["MOVE"],fx(r.MOVE,0)]];
 }
 function checks(sig,recent=true){
-  const ks=Object.keys(sig),n=ks.filter(k=>sig[k]).length;
+  const ks=Object.keys(sig).filter(k=>sig[k]!==null),na=Object.keys(sig).filter(k=>sig[k]===null),n=ks.filter(k=>sig[k]).length;
   if(!recent)return {n:null,total:ks.length,title:"未啟動",html:'<div class="muted" style="font-size:13px">近 20 天沒有進入恐慌，退潮訊號不適用</div>'};
-  return {n,total:ks.length,title:`${n} / ${ks.length}`,html:ks.map(k=>`<div><span class="${sig[k]?"ok":"no"}">${sig[k]?"✓":"✗"}</span> ${k}</div>`).join("")};
+  return {n,total:ks.length,title:`${n} / ${ks.length}`,html:ks.map(k=>`<div><span class="${sig[k]?"ok":"no"}">${sig[k]?"✓":"✗"}</span> ${k}</div>`).join("")+na.map(k=>`<div class="muted" style="font-size:13px">— ${k}（當時無資料）</div>`).join("")};
 }
 
 function lineChart(series,{h=90,markIdx=null,band=true,index=null}={}){

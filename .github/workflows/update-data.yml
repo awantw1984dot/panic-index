@@ -2,6 +2,9 @@ name: 更新資料
 
 on:
   workflow_dispatch:
+  schedule:
+    - cron: "30 13 * * 1-5"   # 台北 21:30（台股融資資料公布後）
+    - cron: "30 23 * * 1-5"   # 台北隔日 07:30（美股收盤後）
 
 permissions:
   contents: write

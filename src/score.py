@@ -53,12 +53,17 @@ def anchor(s, name):
     return pd.Series(np.interp(s, xs, ys), index=s.index).where(s.notna())
 
 
-def blend(s, name, invert=False):
-    """相對水位（近 2 年百分位）與絕對水位各半；百分位尚未暖機前不給分"""
+def blend(s, name, invert=False, anchor_only_ok=False):
+    """相對水位（近 2 年百分位）與絕對水位各半；百分位尚未暖機前不給分
+    anchor_only_ok：歷史資料不足時（臺指VIX 期交所只提供近 4 個月），先只用絕對水位"""
     p = pct_rank(s)
     if invert:
         p = 100 - p
-    return (p + anchor(s, name).reindex(p.index)) / 2
+    a = anchor(s, name)
+    out = (p + a.reindex(p.index)) / 2
+    if anchor_only_ok:
+        out = out.reindex(a.index).fillna(a)
+    return out
 
 
 def pct_rank(s):
@@ -124,13 +129,13 @@ def score_tw(tw):
     c = pd.DataFrame(index=tw.index)
     c["融資維持率(反向)"] = blend(tw["margin_maint"], "融資維持率", invert=True)
     c["融資10日變化(反向)"] = blend(tw["margin_amt_k"].pct_change(10) * 100, "融資10日變化", invert=True)
-    c["臺指VIX"] = blend(tw["tvix"], "臺指VIX")
+    c["臺指VIX"] = blend(tw["tvix"], "臺指VIX", anchor_only_ok=True)
     c["外資期貨淨空單10日變化"] = blend(tw["fut_foreign_net_oi"].diff(10), "外資期貨10日變化", invert=True)
     c["跌破季線比例"] = blend(tw["below_ma60_pct"], "跌破季線比例")
     score, g = weighted(c, TW_GROUPS)
 
-    # 退潮訊號（近 20 天分數曾 ≥ 60 才檢查）
-    recent = (score >= PANIC).astype(float).rolling(20, min_periods=1).max() == 1
+    # 退潮訊號：近 20 天分數曾 ≥ 75（真正的特賣會）才檢查，避免小波動也觸發
+    recent = (score >= 75).astype(float).rolling(20, min_periods=1).max() == 1
     m, b, v = tw["margin_maint"], tw["below_ma60_pct"], tw["tvix"]
     checks = pd.DataFrame({
         "融資維持率止跌回升": (m.diff(3) > 0) & (m > m.rolling(10).min() * 1.01),
@@ -138,8 +143,11 @@ def score_tw(tw):
         "臺指VIX回落": (v.diff(5) < 0) & (v < v.rolling(10).max() * 0.9),
     })
     out = pd.concat([score.rename("score"), g.add_prefix("組_"), c.add_prefix("指標_"), checks.add_prefix("訊號_")], axis=1)
+    checks = checks.astype("float")
+    checks.loc[v.isna(), "臺指VIX回落"] = np.nan          # 沒有臺指VIX資料的日子不列入
+    passed = checks.fillna(1).astype(bool).all(axis=1) & (checks.notna().sum(axis=1) >= 2)
     out["近期恐慌"] = recent
-    out["退潮"] = recent & checks.all(axis=1)
+    out["退潮"] = recent & passed
     raw = tw[["TAIEX", "margin_maint", "margin_amt_k", "tvix", "fut_foreign_net_oi", "below_ma60_pct", "adv", "dec"]]
     return out, raw
 
@@ -171,7 +179,7 @@ def main():
                            for k, v in out.loc[d].items() if k.startswith("組_")}
             r["indicators"] = {k[3:]: (None if pd.isna(v) else round(float(v), 1))
                                for k, v in out.loc[d].items() if k.startswith("指標_")}
-            r["signals"] = {k[3:]: bool(v) for k, v in out.loc[d].items() if k.startswith("訊號_")}
+            r["signals"] = {k[3:]: (None if pd.isna(v) else bool(v)) for k, v in out.loc[d].items() if k.startswith("訊號_")}
             r["raw"] = {k: (None if pd.isna(v) else round(float(v), 4)) for k, v in raw.loc[d].items()}
             if extra is not None:
                 r.update(extra(d))
