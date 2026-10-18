@@ -1,0 +1,38 @@
+name: 抓取程式測試
+
+on:
+  push:
+    paths:
+      - "src/**"
+      - ".github/workflows/test-fetch.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install pandas requests yfinance
+      - name: 短區間測試（不寫入正式資料）
+        env:
+          FRED_API_KEY: ${{ secrets.FRED_API_KEY }}
+          DATA_DIR: /tmp/testdata
+          START_DATE: "2026-07-01"
+        run: |
+          mkdir -p /tmp/testdata
+          { python src/fetch_us.py; echo; python src/fetch_tw.py;
+            echo; echo "=== 7 月中旬台股明細 ==="; python -c "import pandas as pd; print(pd.read_csv('/tmp/testdata/tw_daily.csv',index_col=0).loc['2026-07-14':'2026-07-31'].round(2).to_string())"; } 2>&1 | tee tests/fetch_test_result.txt
+      - name: 存回測試結果
+        if: always()
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add tests/fetch_test_result.txt
+          git commit -m "抓取程式測試結果 [skip ci]" || true
+          git pull --rebase -q && git push
