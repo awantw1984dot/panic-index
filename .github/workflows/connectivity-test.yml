@@ -19,7 +19,9 @@ jobs:
         with:
           python-version: "3.12"
       - run: pip install requests yfinance
-      - run: python tests/connectivity_test2.py | tee tests/connectivity_result2.txt
+      - run: python tests/connectivity_test3.py | tee tests/connectivity_result3.txt
+        env:
+          FRED_API_KEY: ${{ secrets.FRED_API_KEY }}
       - name: 把測試結果存回專案
         run: |
           git config user.name "github-actions[bot]"
