@@ -1,5 +1,5 @@
 {
- "updated": "2026-10-18 14:52",
+ "updated": "2026-10-18 15:58",
  "tw_date": "2026-10-16",
  "us_date": "2026-10-16",
  "tw_score": 51,
@@ -9,6 +9,8 @@
  "quadrant": "預警",
  "tw_exit": false,
  "us_exit": false,
+ "stale": [],
+ "anomalies": [],
  "tw_heat": false,
  "us_heat": true,
  "tw_heat_date": null,
