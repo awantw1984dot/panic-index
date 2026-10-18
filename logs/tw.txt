@@ -1,25 +1,75 @@
 交易日：738 天（2023-10-02 ～ 2026-10-16）
 需逐日抓取：738 天
-Traceback (most recent call last):
-  File "/home/runner/work/panic-index/panic-index/src/fetch_tw.py", line 195, in <module>
-    main()
-  File "/home/runner/work/panic-index/panic-index/src/fetch_tw.py", line 172, in main
-    flush(); print(f"  已完成 {n}/{len(todo)}（{(time.time()-T0)/60:.0f} 分鐘）")
-    ^^^^^^^
-  File "/home/runner/work/panic-index/panic-index/src/fetch_tw.py", line 154, in flush
-    save_merge("tw_daily.csv", pd.DataFrame.from_dict(recs, orient="index"))
-  File "/home/runner/work/panic-index/panic-index/src/common.py", line 65, in save_merge
-    new.to_csv(os.path.join(DATA, name), float_format="%.6g")
-  File "/opt/hostedtoolcache/Python/3.12.15/x64/lib/python3.12/site-packages/pandas/core/generic.py", line 3976, in to_csv
-    return DataFrameRenderer(formatter).to_csv(
-           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/opt/hostedtoolcache/Python/3.12.15/x64/lib/python3.12/site-packages/pandas/io/formats/format.py", line 1025, in to_csv
-    csv_formatter.save()
-  File "/opt/hostedtoolcache/Python/3.12.15/x64/lib/python3.12/site-packages/pandas/io/formats/csvs.py", line 251, in save
-    with get_handle(
-         ^^^^^^^^^^^
-  File "/opt/hostedtoolcache/Python/3.12.15/x64/lib/python3.12/site-packages/pandas/io/common.py", line 797, in get_handle
-    check_parent_directory(str(handle))
-  File "/opt/hostedtoolcache/Python/3.12.15/x64/lib/python3.12/site-packages/pandas/io/common.py", line 656, in check_parent_directory
-    raise OSError(rf"Cannot save file into a non-existent directory: '{parent}'")
-OSError: Cannot save file into a non-existent directory: '/home/runner/work/panic-index/panic-index/data'
+  已完成 25/738（5 分鐘）
+  已完成 50/738（7 分鐘）
+  已完成 75/738（10 分鐘）
+  已完成 100/738（13 分鐘）
+  已完成 125/738（16 分鐘）
+  已完成 150/738（19 分鐘）
+  已完成 175/738（22 分鐘）
+  已完成 200/738（25 分鐘）
+  已完成 225/738（28 分鐘）
+  已完成 250/738（31 分鐘）
+  已完成 275/738（34 分鐘）
+  已完成 300/738（36 分鐘）
+  已完成 325/738（39 分鐘）
+  已完成 350/738（42 分鐘）
+  已完成 375/738（45 分鐘）
+  已完成 400/738（48 分鐘）
+  已完成 425/738（50 分鐘）
+  已完成 450/738（53 分鐘）
+  已完成 475/738（56 分鐘）
+  已完成 500/738（59 分鐘）
+  已完成 525/738（62 分鐘）
+  已完成 550/738（65 分鐘）
+  已完成 575/738（68 分鐘）
+  已完成 600/738（71 分鐘）
+  已完成 625/738（74 分鐘）
+  已完成 650/738（77 分鐘）
+  已完成 675/738（80 分鐘）
+  已完成 700/738（83 分鐘）
+  已完成 725/738（86 分鐘）
+  期貨 2023-10 無資料
+  臺指VIX 2023-10 原始內容：'<HTML  xmlns=\'http://www.w3.org/1999/xhtml\' lang=\'zh-TW\'><head><meta http-equiv=\'Content-Type\' content=\'text/html; charset=big5\' /></head>\r\n<title>404</title>\r\n<STYLE type="text/css">\r\nbody{\r\nfont-size:1em;\r\n }\r\n</STYLE>\r\n<body>\r\n<h1>404</h1>\r\n您瀏覽的頁面暫時無法服務， _<br>\r\n請點選下方連結回首頁!!<br>\r\n<a href="https://www.taifex.com.tw/cht/index">http://www.taifex.com.tw</a>\r\n</body>\r\n</html>\r\n\r\n'
+  臺指VIX 2023-11 原始內容：'<HTML  xmlns=\'http://www.w3.org/1999/xhtml\' lang=\'zh-TW\'><head><meta http-equiv=\'Content-Type\' content=\'text/html; charset=big5\' /></head>\r\n<title>404</title>\r\n<STYLE type="text/css">\r\nbody{\r\nfont-size:1em;\r\n }\r\n</STYLE>\r\n<body>\r\n<h1>404</h1>\r\n您瀏覽的頁面暫時無法服務， _<br>\r\n請點選下方連結回首頁!!<br>\r\n<a href="https://www.taifex.com.tw/cht/index">http://www.taifex.com.tw</a>\r\n</body>\r\n</html>\r\n\r\n'
+  臺指VIX 2023-12 原始內容：'<HTML  xmlns=\'http://www.w3.org/1999/xhtml\' lang=\'zh-TW\'><head><meta http-equiv=\'Content-Type\' content=\'text/html; charset=big5\' /></head>\r\n<title>404</title>\r\n<STYLE type="text/css">\r\nbody{\r\nfont-size:1em;\r\n }\r\n</STYLE>\r\n<body>\r\n<h1>404</h1>\r\n您瀏覽的頁面暫時無法服務， _<br>\r\n請點選下方連結回首頁!!<br>\r\n<a href="https://www.taifex.com.tw/cht/index">http://www.taifex.com.tw</a>\r\n</body>\r\n</html>\r\n\r\n'
+  臺指VIX 2024-01 原始內容：'<HTML  xmlns=\'http://www.w3.org/1999/xhtml\' lang=\'zh-TW\'><head><meta http-equiv=\'Content-Type\' content=\'text/html; charset=big5\' /></head>\r\n<title>404</title>\r\n<STYLE type="text/css">\r\nbody{\r\nfont-size:1em;\r\n }\r\n</STYLE>\r\n<body>\r\n<h1>404</h1>\r\n您瀏覽的頁面暫時無法服務， _<br>\r\n請點選下方連結回首頁!!<br>\r\n<a href="https://www.taifex.com.tw/cht/index">http://www.taifex.com.tw</a>\r\n</body>\r\n</html>\r\n\r\n'
+  臺指VIX 2024-02 原始內容：'<HTML  xmlns=\'http://www.w3.org/1999/xhtml\' lang=\'zh-TW\'><head><meta http-equiv=\'Content-Type\' content=\'text/html; charset=big5\' /></head>\r\n<title>404</title>\r\n<STYLE type="text/css">\r\nbody{\r\nfont-size:1em;\r\n }\r\n</STYLE>\r\n<body>\r\n<h1>404</h1>\r\n您瀏覽的頁面暫時無法服務， _<br>\r\n請點選下方連結回首頁!!<br>\r\n<a href="https://www.taifex.com.tw/cht/index">http://www.taifex.com.tw</a>\r\n</body>\r\n</html>\r\n\r\n'
+  臺指VIX 2024-03 原始內容：'<HTML  xmlns=\'http://www.w3.org/1999/xhtml\' lang=\'zh-TW\'><head><meta http-equiv=\'Content-Type\' content=\'text/html; charset=big5\' /></head>\r\n<title>404</title>\r\n<STYLE type="text/css">\r\nbody{\r\nfont-size:1em;\r\n }\r\n</STYLE>\r\n<body>\r\n<h1>404</h1>\r\n您瀏覽的頁面暫時無法服務， _<br>\r\n請點選下方連結回首頁!!<br>\r\n<a href="https://www.taifex.com.tw/cht/index">http://www.taifex.com.tw</a>\r\n</body>\r\n</html>\r\n\r\n'
+  臺指VIX 2024-04 原始內容：'<HTML  xmlns=\'http://www.w3.org/1999/xhtml\' lang=\'zh-TW\'><head><meta http-equiv=\'Content-Type\' content=\'text/html; charset=big5\' /></head>\r\n<title>404</title>\r\n<STYLE type="text/css">\r\nbody{\r\nfont-size:1em;\r\n }\r\n</STYLE>\r\n<body>\r\n<h1>404</h1>\r\n您瀏覽的頁面暫時無法服務， _<br>\r\n請點選下方連結回首頁!!<br>\r\n<a href="https://www.taifex.com.tw/cht/index">http://www.taifex.com.tw</a>\r\n</body>\r\n</html>\r\n\r\n'
+  臺指VIX 2024-05 原始內容：'<HTML  xmlns=\'http://www.w3.org/1999/xhtml\' lang=\'zh-TW\'><head><meta http-equiv=\'Content-Type\' content=\'text/html; charset=big5\' /></head>\r\n<title>404</title>\r\n<STYLE type="text/css">\r\nbody{\r\nfont-size:1em;\r\n }\r\n</STYLE>\r\n<body>\r\n<h1>404</h1>\r\n您瀏覽的頁面暫時無法服務， _<br>\r\n請點選下方連結回首頁!!<br>\r\n<a href="https://www.taifex.com.tw/cht/index">http://www.taifex.com.tw</a>\r\n</body>\r\n</html>\r\n\r\n'
+  臺指VIX 2024-06 原始內容：'<HTML  xmlns=\'http://www.w3.org/1999/xhtml\' lang=\'zh-TW\'><head><meta http-equiv=\'Content-Type\' content=\'text/html; charset=big5\' /></head>\r\n<title>404</title>\r\n<STYLE type="text/css">\r\nbody{\r\nfont-size:1em;\r\n }\r\n</STYLE>\r\n<body>\r\n<h1>404</h1>\r\n您瀏覽的頁面暫時無法服務， _<br>\r\n請點選下方連結回首頁!!<br>\r\n<a href="https://www.taifex.com.tw/cht/index">http://www.taifex.com.tw</a>\r\n</body>\r\n</html>\r\n\r\n'
+  臺指VIX 2024-07 原始內容：'<HTML  xmlns=\'http://www.w3.org/1999/xhtml\' lang=\'zh-TW\'><head><meta http-equiv=\'Content-Type\' content=\'text/html; charset=big5\' /></head>\r\n<title>404</title>\r\n<STYLE type="text/css">\r\nbody{\r\nfont-size:1em;\r\n }\r\n</STYLE>\r\n<body>\r\n<h1>404</h1>\r\n您瀏覽的頁面暫時無法服務， _<br>\r\n請點選下方連結回首頁!!<br>\r\n<a href="https://www.taifex.com.tw/cht/index">http://www.taifex.com.tw</a>\r\n</body>\r\n</html>\r\n\r\n'
+  臺指VIX 2024-08 原始內容：'<HTML  xmlns=\'http://www.w3.org/1999/xhtml\' lang=\'zh-TW\'><head><meta http-equiv=\'Content-Type\' content=\'text/html; charset=big5\' /></head>\r\n<title>404</title>\r\n<STYLE type="text/css">\r\nbody{\r\nfont-size:1em;\r\n }\r\n</STYLE>\r\n<body>\r\n<h1>404</h1>\r\n您瀏覽的頁面暫時無法服務， _<br>\r\n請點選下方連結回首頁!!<br>\r\n<a href="https://www.taifex.com.tw/cht/index">http://www.taifex.com.tw</a>\r\n</body>\r\n</html>\r\n\r\n'
+  臺指VIX 2024-09 原始內容：'<HTML  xmlns=\'http://www.w3.org/1999/xhtml\' lang=\'zh-TW\'><head><meta http-equiv=\'Content-Type\' content=\'text/html; charset=big5\' /></head>\r\n<title>404</title>\r\n<STYLE type="text/css">\r\nbody{\r\nfont-size:1em;\r\n }\r\n</STYLE>\r\n<body>\r\n<h1>404</h1>\r\n您瀏覽的頁面暫時無法服務， _<br>\r\n請點選下方連結回首頁!!<br>\r\n<a href="https://www.taifex.com.tw/cht/index">http://www.taifex.com.tw</a>\r\n</body>\r\n</html>\r\n\r\n'
+  臺指VIX 2024-10 原始內容：'<HTML  xmlns=\'http://www.w3.org/1999/xhtml\' lang=\'zh-TW\'><head><meta http-equiv=\'Content-Type\' content=\'text/html; charset=big5\' /></head>\r\n<title>404</title>\r\n<STYLE type="text/css">\r\nbody{\r\nfont-size:1em;\r\n }\r\n</STYLE>\r\n<body>\r\n<h1>404</h1>\r\n您瀏覽的頁面暫時無法服務， _<br>\r\n請點選下方連結回首頁!!<br>\r\n<a href="https://www.taifex.com.tw/cht/index">http://www.taifex.com.tw</a>\r\n</body>\r\n</html>\r\n\r\n'
+  臺指VIX 2024-11 原始內容：'<HTML  xmlns=\'http://www.w3.org/1999/xhtml\' lang=\'zh-TW\'><head><meta http-equiv=\'Content-Type\' content=\'text/html; charset=big5\' /></head>\r\n<title>404</title>\r\n<STYLE type="text/css">\r\nbody{\r\nfont-size:1em;\r\n }\r\n</STYLE>\r\n<body>\r\n<h1>404</h1>\r\n您瀏覽的頁面暫時無法服務， _<br>\r\n請點選下方連結回首頁!!<br>\r\n<a href="https://www.taifex.com.tw/cht/index">http://www.taifex.com.tw</a>\r\n</body>\r\n</html>\r\n\r\n'
+  臺指VIX 2024-12 原始內容：'<HTML  xmlns=\'http://www.w3.org/1999/xhtml\' lang=\'zh-TW\'><head><meta http-equiv=\'Content-Type\' content=\'text/html; charset=big5\' /></head>\r\n<title>404</title>\r\n<STYLE type="text/css">\r\nbody{\r\nfont-size:1em;\r\n }\r\n</STYLE>\r\n<body>\r\n<h1>404</h1>\r\n您瀏覽的頁面暫時無法服務， _<br>\r\n請點選下方連結回首頁!!<br>\r\n<a href="https://www.taifex.com.tw/cht/index">http://www.taifex.com.tw</a>\r\n</body>\r\n</html>\r\n\r\n'
+  臺指VIX 2025-01 原始內容：'<HTML  xmlns=\'http://www.w3.org/1999/xhtml\' lang=\'zh-TW\'><head><meta http-equiv=\'Content-Type\' content=\'text/html; charset=big5\' /></head>\r\n<title>404</title>\r\n<STYLE type="text/css">\r\nbody{\r\nfont-size:1em;\r\n }\r\n</STYLE>\r\n<body>\r\n<h1>404</h1>\r\n您瀏覽的頁面暫時無法服務， _<br>\r\n請點選下方連結回首頁!!<br>\r\n<a href="https://www.taifex.com.tw/cht/index">http://www.taifex.com.tw</a>\r\n</body>\r\n</html>\r\n\r\n'
+  臺指VIX 2025-02 原始內容：'<HTML  xmlns=\'http://www.w3.org/1999/xhtml\' lang=\'zh-TW\'><head><meta http-equiv=\'Content-Type\' content=\'text/html; charset=big5\' /></head>\r\n<title>404</title>\r\n<STYLE type="text/css">\r\nbody{\r\nfont-size:1em;\r\n }\r\n</STYLE>\r\n<body>\r\n<h1>404</h1>\r\n您瀏覽的頁面暫時無法服務， _<br>\r\n請點選下方連結回首頁!!<br>\r\n<a href="https://www.taifex.com.tw/cht/index">http://www.taifex.com.tw</a>\r\n</body>\r\n</html>\r\n\r\n'
+  臺指VIX 2025-03 原始內容：'<HTML  xmlns=\'http://www.w3.org/1999/xhtml\' lang=\'zh-TW\'><head><meta http-equiv=\'Content-Type\' content=\'text/html; charset=big5\' /></head>\r\n<title>404</title>\r\n<STYLE type="text/css">\r\nbody{\r\nfont-size:1em;\r\n }\r\n</STYLE>\r\n<body>\r\n<h1>404</h1>\r\n您瀏覽的頁面暫時無法服務， _<br>\r\n請點選下方連結回首頁!!<br>\r\n<a href="https://www.taifex.com.tw/cht/index">http://www.taifex.com.tw</a>\r\n</body>\r\n</html>\r\n\r\n'
+  臺指VIX 2025-04 原始內容：'<HTML  xmlns=\'http://www.w3.org/1999/xhtml\' lang=\'zh-TW\'><head><meta http-equiv=\'Content-Type\' content=\'text/html; charset=big5\' /></head>\r\n<title>404</title>\r\n<STYLE type="text/css">\r\nbody{\r\nfont-size:1em;\r\n }\r\n</STYLE>\r\n<body>\r\n<h1>404</h1>\r\n您瀏覽的頁面暫時無法服務， _<br>\r\n請點選下方連結回首頁!!<br>\r\n<a href="https://www.taifex.com.tw/cht/index">http://www.taifex.com.tw</a>\r\n</body>\r\n</html>\r\n\r\n'
+  臺指VIX 2025-05 原始內容：'<HTML  xmlns=\'http://www.w3.org/1999/xhtml\' lang=\'zh-TW\'><head><meta http-equiv=\'Content-Type\' content=\'text/html; charset=big5\' /></head>\r\n<title>404</title>\r\n<STYLE type="text/css">\r\nbody{\r\nfont-size:1em;\r\n }\r\n</STYLE>\r\n<body>\r\n<h1>404</h1>\r\n您瀏覽的頁面暫時無法服務， _<br>\r\n請點選下方連結回首頁!!<br>\r\n<a href="https://www.taifex.com.tw/cht/index">http://www.taifex.com.tw</a>\r\n</body>\r\n</html>\r\n\r\n'
+  臺指VIX 2025-06 原始內容：'<HTML  xmlns=\'http://www.w3.org/1999/xhtml\' lang=\'zh-TW\'><head><meta http-equiv=\'Content-Type\' content=\'text/html; charset=big5\' /></head>\r\n<title>404</title>\r\n<STYLE type="text/css">\r\nbody{\r\nfont-size:1em;\r\n }\r\n</STYLE>\r\n<body>\r\n<h1>404</h1>\r\n您瀏覽的頁面暫時無法服務， _<br>\r\n請點選下方連結回首頁!!<br>\r\n<a href="https://www.taifex.com.tw/cht/index">http://www.taifex.com.tw</a>\r\n</body>\r\n</html>\r\n\r\n'
+  臺指VIX 2025-07 原始內容：'<HTML  xmlns=\'http://www.w3.org/1999/xhtml\' lang=\'zh-TW\'><head><meta http-equiv=\'Content-Type\' content=\'text/html; charset=big5\' /></head>\r\n<title>404</title>\r\n<STYLE type="text/css">\r\nbody{\r\nfont-size:1em;\r\n }\r\n</STYLE>\r\n<body>\r\n<h1>404</h1>\r\n您瀏覽的頁面暫時無法服務， _<br>\r\n請點選下方連結回首頁!!<br>\r\n<a href="https://www.taifex.com.tw/cht/index">http://www.taifex.com.tw</a>\r\n</body>\r\n</html>\r\n\r\n'
+  臺指VIX 2025-08 原始內容：'<HTML  xmlns=\'http://www.w3.org/1999/xhtml\' lang=\'zh-TW\'><head><meta http-equiv=\'Content-Type\' content=\'text/html; charset=big5\' /></head>\r\n<title>404</title>\r\n<STYLE type="text/css">\r\nbody{\r\nfont-size:1em;\r\n }\r\n</STYLE>\r\n<body>\r\n<h1>404</h1>\r\n您瀏覽的頁面暫時無法服務， _<br>\r\n請點選下方連結回首頁!!<br>\r\n<a href="https://www.taifex.com.tw/cht/index">http://www.taifex.com.tw</a>\r\n</body>\r\n</html>\r\n\r\n'
+  臺指VIX 2025-09 原始內容：'<HTML  xmlns=\'http://www.w3.org/1999/xhtml\' lang=\'zh-TW\'><head><meta http-equiv=\'Content-Type\' content=\'text/html; charset=big5\' /></head>\r\n<title>404</title>\r\n<STYLE type="text/css">\r\nbody{\r\nfont-size:1em;\r\n }\r\n</STYLE>\r\n<body>\r\n<h1>404</h1>\r\n您瀏覽的頁面暫時無法服務， _<br>\r\n請點選下方連結回首頁!!<br>\r\n<a href="https://www.taifex.com.tw/cht/index">http://www.taifex.com.tw</a>\r\n</body>\r\n</html>\r\n\r\n'
+  臺指VIX 2025-10 原始內容：'<HTML  xmlns=\'http://www.w3.org/1999/xhtml\' lang=\'zh-TW\'><head><meta http-equiv=\'Content-Type\' content=\'text/html; charset=big5\' /></head>\r\n<title>404</title>\r\n<STYLE type="text/css">\r\nbody{\r\nfont-size:1em;\r\n }\r\n</STYLE>\r\n<body>\r\n<h1>404</h1>\r\n您瀏覽的頁面暫時無法服務， _<br>\r\n請點選下方連結回首頁!!<br>\r\n<a href="https://www.taifex.com.tw/cht/index">http://www.taifex.com.tw</a>\r\n</body>\r\n</html>\r\n\r\n'
+  臺指VIX 2025-11 原始內容：'<HTML  xmlns=\'http://www.w3.org/1999/xhtml\' lang=\'zh-TW\'><head><meta http-equiv=\'Content-Type\' content=\'text/html; charset=big5\' /></head>\r\n<title>404</title>\r\n<STYLE type="text/css">\r\nbody{\r\nfont-size:1em;\r\n }\r\n</STYLE>\r\n<body>\r\n<h1>404</h1>\r\n您瀏覽的頁面暫時無法服務， _<br>\r\n請點選下方連結回首頁!!<br>\r\n<a href="https://www.taifex.com.tw/cht/index">http://www.taifex.com.tw</a>\r\n</body>\r\n</html>\r\n\r\n'
+  臺指VIX 2025-12 原始內容：'<HTML  xmlns=\'http://www.w3.org/1999/xhtml\' lang=\'zh-TW\'><head><meta http-equiv=\'Content-Type\' content=\'text/html; charset=big5\' /></head>\r\n<title>404</title>\r\n<STYLE type="text/css">\r\nbody{\r\nfont-size:1em;\r\n }\r\n</STYLE>\r\n<body>\r\n<h1>404</h1>\r\n您瀏覽的頁面暫時無法服務， _<br>\r\n請點選下方連結回首頁!!<br>\r\n<a href="https://www.taifex.com.tw/cht/index">http://www.taifex.com.tw</a>\r\n</body>\r\n</html>\r\n\r\n'
+  臺指VIX 2026-01 原始內容：'<HTML  xmlns=\'http://www.w3.org/1999/xhtml\' lang=\'zh-TW\'><head><meta http-equiv=\'Content-Type\' content=\'text/html; charset=big5\' /></head>\r\n<title>404</title>\r\n<STYLE type="text/css">\r\nbody{\r\nfont-size:1em;\r\n }\r\n</STYLE>\r\n<body>\r\n<h1>404</h1>\r\n您瀏覽的頁面暫時無法服務， _<br>\r\n請點選下方連結回首頁!!<br>\r\n<a href="https://www.taifex.com.tw/cht/index">http://www.taifex.com.tw</a>\r\n</body>\r\n</html>\r\n\r\n'
+  臺指VIX 2026-02 原始內容：'<HTML  xmlns=\'http://www.w3.org/1999/xhtml\' lang=\'zh-TW\'><head><meta http-equiv=\'Content-Type\' content=\'text/html; charset=big5\' /></head>\r\n<title>404</title>\r\n<STYLE type="text/css">\r\nbody{\r\nfont-size:1em;\r\n }\r\n</STYLE>\r\n<body>\r\n<h1>404</h1>\r\n您瀏覽的頁面暫時無法服務， _<br>\r\n請點選下方連結回首頁!!<br>\r\n<a href="https://www.taifex.com.tw/cht/index">http://www.taifex.com.tw</a>\r\n</body>\r\n</html>\r\n\r\n'
+  臺指VIX 2026-03 原始內容：'<HTML  xmlns=\'http://www.w3.org/1999/xhtml\' lang=\'zh-TW\'><head><meta http-equiv=\'Content-Type\' content=\'text/html; charset=big5\' /></head>\r\n<title>404</title>\r\n<STYLE type="text/css">\r\nbody{\r\nfont-size:1em;\r\n }\r\n</STYLE>\r\n<body>\r\n<h1>404</h1>\r\n您瀏覽的頁面暫時無法服務， _<br>\r\n請點選下方連結回首頁!!<br>\r\n<a href="https://www.taifex.com.tw/cht/index">http://www.taifex.com.tw</a>\r\n</body>\r\n</html>\r\n\r\n'
+  臺指VIX 2026-04 原始內容：'<HTML  xmlns=\'http://www.w3.org/1999/xhtml\' lang=\'zh-TW\'><head><meta http-equiv=\'Content-Type\' content=\'text/html; charset=big5\' /></head>\r\n<title>404</title>\r\n<STYLE type="text/css">\r\nbody{\r\nfont-size:1em;\r\n }\r\n</STYLE>\r\n<body>\r\n<h1>404</h1>\r\n您瀏覽的頁面暫時無法服務， _<br>\r\n請點選下方連結回首頁!!<br>\r\n<a href="https://www.taifex.com.tw/cht/index">http://www.taifex.com.tw</a>\r\n</body>\r\n</html>\r\n\r\n'
+  臺指VIX 2026-05 原始內容：'<HTML  xmlns=\'http://www.w3.org/1999/xhtml\' lang=\'zh-TW\'><head><meta http-equiv=\'Content-Type\' content=\'text/html; charset=big5\' /></head>\r\n<title>404</title>\r\n<STYLE type="text/css">\r\nbody{\r\nfont-size:1em;\r\n }\r\n</STYLE>\r\n<body>\r\n<h1>404</h1>\r\n您瀏覽的頁面暫時無法服務， _<br>\r\n請點選下方連結回首頁!!<br>\r\n<a href="https://www.taifex.com.tw/cht/index">http://www.taifex.com.tw</a>\r\n</body>\r\n</html>\r\n\r\n'
+  臺指VIX 2026-06 原始內容：'<HTML  xmlns=\'http://www.w3.org/1999/xhtml\' lang=\'zh-TW\'><head><meta http-equiv=\'Content-Type\' content=\'text/html; charset=big5\' /></head>\r\n<title>404</title>\r\n<STYLE type="text/css">\r\nbody{\r\nfont-size:1em;\r\n }\r\n</STYLE>\r\n<body>\r\n<h1>404</h1>\r\n您瀏覽的頁面暫時無法服務， _<br>\r\n請點選下方連結回首頁!!<br>\r\n<a href="https://www.taifex.com.tw/cht/index">http://www.taifex.com.tw</a>\r\n</body>\r\n</html>\r\n\r\n'
+  臺指VIX 缺少月份：['2023-10', '2023-11', '2023-12', '2024-01', '2024-02', '2024-03', '2024-04', '2024-05', '2024-06', '2024-07', '2024-08', '2024-09', '2024-10', '2024-11', '2024-12', '2025-01', '2025-02', '2025-03', '2025-04', '2025-05', '2025-06', '2025-07', '2025-08', '2025-09', '2025-10', '2025-11', '2025-12', '2026-01', '2026-02', '2026-03', '2026-04', '2026-05', '2026-06']
+
+台股資料：738 列，2023-10-02 ～ 2026-10-16
+缺值數： {'TAIEX': 0, 'fut_foreign_net_oi': 20, 'tvix': 664, 'margin_lots': 0, 'margin_amt_k': 0, 'margin_maint': 0, 'adv': 0, 'dec': 0, 'below_ma60_pct': 59}
+最近 3 天：
+               TAIEX  fut_foreign_net_oi   tvix  margin_lots  margin_amt_k  margin_maint  adv  dec  below_ma60_pct
+date                                                                                                              
+2026-10-14  48625.83            -86814.0  26.08    9467250.0   651567000.0        191.61  741  240           44.98
+2026-10-15  46969.87            -97582.0  30.61    9521230.0   646415000.0        181.80  200  805           51.69
+2026-10-16  47111.26            -93675.0  26.37    9538660.0   645594000.0        183.38  684  286           46.81

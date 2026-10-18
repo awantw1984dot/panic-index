@@ -1,21 +1,13 @@
-Traceback (most recent call last):
-  File "/home/runner/work/panic-index/panic-index/src/fetch_us.py", line 51, in <module>
-    main()
-  File "/home/runner/work/panic-index/panic-index/src/fetch_us.py", line 43, in main
-    df = save_merge("us_daily.csv", df)
-         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/home/runner/work/panic-index/panic-index/src/common.py", line 65, in save_merge
-    new.to_csv(os.path.join(DATA, name), float_format="%.6g")
-  File "/opt/hostedtoolcache/Python/3.12.15/x64/lib/python3.12/site-packages/pandas/core/generic.py", line 3976, in to_csv
-    return DataFrameRenderer(formatter).to_csv(
-           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/opt/hostedtoolcache/Python/3.12.15/x64/lib/python3.12/site-packages/pandas/io/formats/format.py", line 1025, in to_csv
-    csv_formatter.save()
-  File "/opt/hostedtoolcache/Python/3.12.15/x64/lib/python3.12/site-packages/pandas/io/formats/csvs.py", line 251, in save
-    with get_handle(
-         ^^^^^^^^^^^
-  File "/opt/hostedtoolcache/Python/3.12.15/x64/lib/python3.12/site-packages/pandas/io/common.py", line 797, in get_handle
-    check_parent_directory(str(handle))
-  File "/opt/hostedtoolcache/Python/3.12.15/x64/lib/python3.12/site-packages/pandas/io/common.py", line 656, in check_parent_directory
-    raise OSError(rf"Cannot save file into a non-existent directory: '{parent}'")
-OSError: Cannot save file into a non-existent directory: '/home/runner/work/panic-index/panic-index/data'
+美股資料：800 列，2023-10-02 ～ 2026-10-16
+各欄最新值：
+IEF          90.420
+JNK          92.280
+SPX        7659.440
+MOVE        101.100
+SOX       11137.290
+VIX          19.990
+VIX3M        20.500
+HY_OAS        3.230
+IG_OAS        0.840
+STLFSI       -0.721
+缺值數： {'IEF': 36, 'JNK': 36, 'SPX': 36, 'MOVE': 42, 'SOX': 36, 'VIX': 34, 'VIX3M': 36, 'HY_OAS': 14, 'IG_OAS': 15, 'STLFSI': 642}
