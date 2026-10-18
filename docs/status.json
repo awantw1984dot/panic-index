@@ -1,5 +1,5 @@
 {
- "updated": "2026-10-18 12:58",
+ "updated": "2026-10-18 14:48",
  "tw_date": "2026-10-16",
  "us_date": "2026-10-16",
  "tw_score": 51,
@@ -9,11 +9,12 @@
  "quadrant": "預警",
  "tw_exit": false,
  "us_exit": false,
- "events": [
-  "美股原價→開始打折",
-  "狀態→預警"
- ],
+ "tw_heat": false,
+ "us_heat": true,
+ "tw_heat_date": null,
+ "us_heat_date": "2026-10-16",
+ "events": [],
  "summary": "台股 51 原價｜美股 62 開始打折｜預警",
  "title": "預警｜台股 51・美股 62",
- "body": "美股原價→開始打折，狀態→預警"
+ "body": ""
 }

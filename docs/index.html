@@ -193,6 +193,24 @@ const HELP_US=[
  ["退潮訊號","近 20 天曾出現真正恐慌（分數 ≥80、VIX ≥20 且期限結構 ≥1）才會啟動：期限結構回到 1 以下，加上信用利差開始收斂。"]];
 const helpBox=list=>`<details class="help"><summary><span>指標說明</span><span class="chev">▶</span></summary><dl>${list.map(([k,v])=>`<dt>${k}</dt><dd>${v}</dd>`).join("")}</dl></details>`;
 
+const heatTag=r=>r&&r.heat?`<div style="margin-top:4px;font-size:12px;color:var(--amber);font-weight:600">▲ 升溫中：5 日 +${Math.round(r.chg5)}</div>`:"";
+function usDST(d){ // 美國夏令時間：3 月第二個週日～11 月第一個週日
+  const y=d.getUTCFullYear(),sun=(m,n)=>{const x=new Date(Date.UTC(y,m,1));return 1+((7-x.getUTCDay())%7)+7*(n-1)};
+  const a=Date.UTC(y,2,sun(2,2)),b=Date.UTC(y,10,sun(10,1)),t=d.getTime();return t>=a&&t<b;
+}
+function eventsCard(D){
+  const ev=D.events||[]; if(!ev.length)return "";
+  const today=new Date(new Date().toLocaleString("en-US",{timeZone:"Asia/Taipei"})),t0=today.toISOString().slice(0,10);
+  const end=new Date(today.getTime()+7*864e5).toISOString().slice(0,10);
+  const list=ev.filter(e=>e.date>=t0&&e.date<=end); if(!list.length)return "";
+  const wd="日一二三四五六";
+  const rows=list.map(e=>{
+    const d=new Date(e.date+"T12:00:00Z"),dst=usDST(d),md=e.date.slice(5).replace("-","/");
+    const when=e.name.startsWith("FOMC")?`台灣時間隔天凌晨 ${dst?"2":"3"}:00`:`台灣時間 ${dst?"20":"21"}:30`;
+    return `<div class="row" style="font-size:13px;padding:3px 0"><span><b>${md}</b>（${wd[d.getUTCDay()]}）${e.name}</span><span class="tiny">${when}</span></div>`;}).join("");
+  return `<div class="card" style="padding:10px 16px"><div class="tiny" style="margin-bottom:2px">未來 7 天重要事件（美東日期）・公布前後容易出現波動</div>${rows}</div>`;
+}
+
 function dayCard(D,i,{compact=false}={}){
   const tw=D.tw,t=tw[i];
   const usRow=D.us.filter(u=>u.date<=t.date).slice(-1)[0];
@@ -205,17 +223,18 @@ function dayCard(D,i,{compact=false}={}){
   <div class="grid2" style="margin-top:${compact?10:0}px">
     <div class="tile ${hl}"><div class="muted">台股 · 怎麼做</div><div class="big">${r0(t.score)}</div>
       <span class="pill z-${zone(t.score)}">${zone(t.score)}</span>
-      <div class="tiny" style="margin-top:6px">${dTw==null?"":"較前日 "+(dTw>0?"+":"")+Math.round(dTw)}</div></div>
+      <div class="tiny" style="margin-top:6px">${dTw==null?"":"較前日 "+(dTw>0?"+":"")+Math.round(dTw)}</div>${heatTag(t)}</div>
     <div class="tile ${t.us_score>=60?"hl"+(t.us_score>=80?" red":""):""}"><div class="muted">美股 · 怎麼看</div><div class="big">${r0(t.us_score)}</div>
       <span class="pill z-${zone(t.us_score)}">${zone(t.us_score)}</span>
-      <div class="tiny" style="margin-top:6px">${usRow?"美股資料 "+usRow.date.slice(5):""}</div></div>
+      <div class="tiny" style="margin-top:6px">${usRow?"美股資料 "+usRow.date.slice(5):""}</div>${heatTag(usRow)}</div>
   </div>
   ${compact?"":saleLine(D,t.date)}
   <div class="card"><div class="row"><span class="h">目前狀態：${q||"—"}</span><span class="tiny">≥60 視為恐慌側</span></div>
     <div class="quad"><span></span><span class="tiny">台股平靜</span><span class="tiny">台股恐慌</span>
       <span class="v">美股<br>平靜</span>${cell("正常環境")}${cell("本土事件")}
       <span class="v">美股<br>恐慌</span>${cell("預警")}${cell("系統性恐慌")}</div></div>
-  <div class="card action"><div class="h" style="margin-bottom:4px">對應行動</div><div style="font-size:14px;line-height:1.7">${esc(action(t,i,tw))}</div></div>`;
+  <div class="card action"><div class="h" style="margin-bottom:4px">對應行動</div><div style="font-size:14px;line-height:1.7">${esc(action(t,i,tw))}</div></div>
+  ${compact?"":eventsCard(D)}`;
   if(compact)return html+`<div class="card"><div class="h">台股退潮訊號：${twc.title}</div><div class="checks">${twc.html}</div></div>`;
   html+=`
   <div class="card"><div class="row"><span class="h">台股指標</span><span class="tiny">百分位 / 數值　${t.date}</span></div>

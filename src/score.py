@@ -16,6 +16,7 @@ from common import DATA, ROOT, load_csv
 
 WIN, MINP = 504, 252          # 百分位視窗約 2 年，至少 1 年資料才給分
 PANIC = 60                    # 四格判斷：≥60 視為恐慌側
+HEAT = 15                     # 升溫警示：5 個交易日上升 ≥15 分，且分數在 40～80 之間
 ZONES = [(0, 20, "漲價中"), (20, 60, "原價"), (60, 80, "開始打折"), (80, 101, "特賣會")]
 
 US_GROUPS = {   # 組別: (權重, [指標])
@@ -71,6 +72,13 @@ def pct_rank(s):
     s = s.dropna()
     return s.rolling(WIN, min_periods=MINP).apply(
         lambda x: (x[:-1] < x[-1]).mean() * 100 + (x[:-1] == x[-1]).mean() * 50, raw=True)
+
+
+def heat_of(sc, i):
+    """升溫：5 個交易日上升 ≥ HEAT 分，且分數在 40～80 之間"""
+    if i < 5 or pd.isna(sc.iloc[i]) or pd.isna(sc.iloc[i - 5]):
+        return False
+    return bool(sc.iloc[i] - sc.iloc[i - 5] >= HEAT and 40 <= sc.iloc[i] < 80)
 
 
 def zone(x):
@@ -172,7 +180,12 @@ def main():
     def rows(out, raw, extra=None):
         recs = []
         for d in out.index[out["score"].notna()]:
+            i = out.index.get_loc(d)
+            sc = out["score"]
+            prev5 = sc.iloc[i - 5] if i >= 5 else np.nan
+            chg5 = None if pd.isna(prev5) else round(float(sc.iloc[i] - prev5), 1)
             r = {"date": d.strftime("%Y-%m-%d"), "score": round(float(out.at[d, "score"]), 1),
+                 "chg5": chg5, "heat": heat_of(sc, i), "heat_start": heat_of(sc, i) and not any(heat_of(sc, k) for k in range(max(0, i - 10), i)),
                  "zone": zone(out.at[d, "score"]), "退潮": bool(out.at[d, "退潮"]),
                  "recent": bool(out.at[d, "近期恐慌" if "近期恐慌" in out else "近期真恐慌"])}
             r["groups"] = {k[2:]: (None if pd.isna(v) else round(float(v), 1))
@@ -191,8 +204,13 @@ def main():
         "quadrant": quadrant(tw_out.at[d, "score"], us_on_tw[d])})
     us_rows = rows(us_out, us_raw)
     site = os.path.join(ROOT, "docs"); os.makedirs(site, exist_ok=True)
+    cal = []   # 經濟數據公布日（fetch_us.py 產生）
+    ep = os.path.join(DATA, "events.json")
+    if os.path.exists(ep):
+        with open(ep, encoding="utf-8") as f:
+            cal = json.load(f)
     data = {"updated": pd.Timestamp.now(tz="Asia/Taipei").strftime("%Y-%m-%d %H:%M"),
-            "tw": tw_rows, "us": us_rows}
+            "tw": tw_rows, "us": us_rows, "events": cal}
     with open(os.path.join(site, "data.json"), "w", encoding="utf-8") as f:
         json.dump(data, f, ensure_ascii=False, separators=(",", ":"))
 
@@ -222,9 +240,16 @@ def main():
         events.append(f"狀態→{t['quadrant']}")
     if u["退潮"] and not prev.get("us_exit"):
         events.append("美股退潮訊號觸發")
+    # 升溫：10 個交易日內只提醒一次；用日期判斷，避免早晚兩次更新重複通知
+    if t["heat_start"] and prev.get("tw_heat_date") != t["date"]:
+        events.append(f"台股升溫：5日+{t['chg5']:.0f}")
+    if u["heat_start"] and prev.get("us_heat_date") != u["date"]:
+        events.append(f"美股升溫：5日+{u['chg5']:.0f}")
     status = {"updated": data["updated"], "tw_date": t["date"], "us_date": u["date"],
               "tw_score": round(t["score"]), "tw_zone": t["zone"], "us_score": round(u["score"]), "us_zone": u["zone"],
-              "quadrant": t["quadrant"], "tw_exit": t["退潮"], "us_exit": u["退潮"], "events": events,
+              "quadrant": t["quadrant"], "tw_exit": t["退潮"], "us_exit": u["退潮"], "tw_heat": t["heat"], "us_heat": u["heat"],
+              "tw_heat_date": t["date"] if t["heat_start"] else prev.get("tw_heat_date"),
+              "us_heat_date": u["date"] if u["heat_start"] else prev.get("us_heat_date"), "events": events,
               "summary": f"台股 {t['score']:.0f} {t['zone']}｜美股 {u['score']:.0f} {u['zone']}｜{t['quadrant']}",
               # 給捷徑通知用：標題放重點，內容一行；沒有事件時 body 為空字串
               "title": f"{t['quadrant']}｜台股 {t['score']:.0f}・美股 {u['score']:.0f}",
