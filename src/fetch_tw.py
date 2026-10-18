@@ -111,7 +111,7 @@ def fetch_tvix(start, end):
     for m in months(start, end):
         r = get(f"https://www.taifex.com.tw/file/taifex/Dailydownload/vix/log2data/{m:%Y%m}new.txt", wait=1)
         txt = r.content.decode("big5", errors="replace")
-        rows = re.findall(r"^(\d{8}|\d{4}/\d{2}/\d{2})\t[^\t]*\t([\d.]+)", txt, flags=re.M)
+        rows = re.findall(r"^(\d{8})\t\d+\t+([\d.]+)", txt, flags=re.M)   # 欄位間有多個 tab
         if not rows:
             missing.append(f"{m:%Y-%m}")
             print(f"  臺指VIX {m:%Y-%m} 原始內容：{txt[:400]!r}")
