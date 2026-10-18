@@ -38,10 +38,10 @@ h1{font-size:20px;font-weight:600;margin:0}
 .pill{display:inline-block;font-size:12px;padding:2px 9px;border-radius:7px;font-weight:500}
 .z-漲價中{background:var(--blue-bg);color:var(--blue)} .z-原價{background:var(--gray-bg);color:var(--text2)}
 .z-開始打折{background:var(--amber-bg);color:var(--amber)} .z-特賣會{background:var(--red-bg);color:var(--red)}
-.quad{display:grid;grid-template-columns:22px repeat(2,minmax(0,1fr));gap:5px;font-size:12px;text-align:center;margin-top:8px}
+.quad{display:grid;grid-template-columns:30px repeat(2,minmax(0,1fr));gap:5px;font-size:12px;text-align:center;margin-top:8px}
 .quad .c{background:var(--sub);border-radius:8px;padding:11px 4px;color:var(--text2)}
 .quad .c.on{background:var(--amber-bg);color:var(--amber);font-weight:600;outline:1.5px solid var(--amber)}
-.quad .v{writing-mode:vertical-rl;letter-spacing:1px;color:var(--text3);font-size:11px;align-self:center;justify-self:center;line-height:1}
+.quad .v{color:var(--text3);font-size:11px;align-self:center;line-height:1.3}
 .action{border:.5px solid var(--blue);}
 .ind{display:grid;grid-template-columns:96px minmax(0,1fr) 62px;gap:9px 8px;align-items:center;font-size:13px;margin-top:10px}
 .bar{height:6px;background:var(--sub);border-radius:3px;overflow:hidden}
@@ -116,7 +116,7 @@ function usInd(u){
 }
 function checks(sig,recent=true){
   const ks=Object.keys(sig).filter(k=>sig[k]!==null),na=Object.keys(sig).filter(k=>sig[k]===null),n=ks.filter(k=>sig[k]).length;
-  if(!recent)return {n:null,total:ks.length,title:"未啟動",html:'<div class="muted" style="font-size:13px">近 20 天沒有進入恐慌，退潮訊號不適用</div>'};
+  if(!recent)return {n:null,total:ks.length,title:"未啟動",html:'<div class="muted" style="font-size:13px">近 20 天沒有進入特賣會，退潮訊號不適用</div>'};
   return {n,total:ks.length,title:`${n} / ${ks.length}`,html:ks.map(k=>`<div><span class="${sig[k]?"ok":"no"}">${sig[k]?"✓":"✗"}</span> ${k}</div>`).join("")+na.map(k=>`<div class="muted" style="font-size:13px">— ${k}（當時無資料）</div>`).join("")};
 }
 
@@ -156,8 +156,8 @@ function dayCard(D,i,{compact=false}={}){
   </div>
   <div class="card"><div class="row"><span class="h">目前狀態：${q||"—"}</span><span class="tiny">≥60 視為恐慌側</span></div>
     <div class="quad"><span></span><span class="tiny">台股平靜</span><span class="tiny">台股恐慌</span>
-      <span class="v">美平靜</span>${cell("正常環境")}${cell("本土事件")}
-      <span class="v">美恐慌</span>${cell("預警")}${cell("系統性恐慌")}</div></div>
+      <span class="v">美股<br>平靜</span>${cell("正常環境")}${cell("本土事件")}
+      <span class="v">美股<br>恐慌</span>${cell("預警")}${cell("系統性恐慌")}</div></div>
   <div class="card action"><div class="h" style="margin-bottom:4px">對應行動</div><div style="font-size:14px;line-height:1.7">${esc(action(t,i,tw))}</div></div>`;
   if(compact)return html+`<div class="card"><div class="h">台股退潮訊號：${twc.title}</div><div class="checks">${twc.html}</div></div>`;
   html+=`
