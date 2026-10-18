@@ -1,24 +1,189 @@
-##### vixDaily3MNew 頁面長度 125916
-   /cht/7/vixDaily3MNew
-   /cht/7/vixMin3MNew
-   /cht/7/vixMinNew
-   /cht/7/vixQA
-   https://www.facebook.com/sharer/sharer.php?u=https://www.taifex.com.tw/cht/7/vixDaily3MNew
-文字片段： 類選擇權 每月平均日成交金額 股價指數類期貨 個股期貨(區分股票與ETF) 商品類期貨 匯率類期貨 股價指數類選擇權 個股選擇權 (區分股票與ETF) 商品類選擇權 個股期貨交易量統計表(區分股票與ETF) 每日交易量統計表 每月交易量統計表 每年交易量統計表 每日交易量前十大統計表 每月市場電子式交易下單統計（網路與DMA下單） 契約成交價值 前3個月每日收盤之臺指選擇權波動率指數 以CBOE VIX指數編製公式計算 交易日期 臺指選擇權波動率指數 2026/10 2026/09 2026/08 2026/07 註： 自2020年11月23日起，新增收盤前1分鐘平均臺指選擇權波動率指數之揭示。 本公司臺指選擇權波動率指數（以下稱「本指數」），係依據芝加哥選擇權交易所（CBOE）研發之「波動率指數編製公式」所計算，並取得STANDARD & POOR'S（S&P）授權使用該編製公式。S&P與CBOE對本公司之授權，其免責聲明如下： CBOE及S&amp;P未贊助、認可或促銷「本指數」所衍生之任何金融商品； 除授權臺灣期貨交易所得使用相關之CBOE 波動率指數編製公式外，CBOE及S&amp;P與「本指數」所衍生之任何金融商品並無任何關係； 於維持或修改CBOE波動率指數編製公式時，CBOE並無義務考量臺灣期貨交易所或任何其他人之需求；及 CBOE及S&amp;P並無義務或責任管理、行銷或交易「本指數」所衍生之任何金融商品或以該商品為基礎之任何種類或性質之任何其他投資商品。臺灣期貨交易所認知：臺灣期貨交易所業經S&amp;P之授權得使用CBOE波動率指數編製公式，S&amp;P係The McGraw-Hill Companies, Inc.的一個部門及CBOE之被授權人，且臺灣期貨交易所與S&amp;P及CBOE間之唯一關係為臺灣期貨交易所係S&amp;P及CBOE之被授權人。因此，「本指數」所衍生之任何金融商品並未經S&amp;P或CBOE之贊助、認可、銷售或促銷。S&amp;P及CBOE未就投資「本指數」所衍生之任何金融商品或一般證券之適當性，或使用CBOE 波動率指數編製公式，或投資、使用或交易「本指數」所衍生之任何金融商品之結果，對第三人提供明示或默示之擔保。此外，S&amp;P及CBOE未就CBOE波動率指數編製公式提供任何陳述，或明示或默示之擔保，並明示聲明排除所有其具銷售性或適於特定目的或使用之保證。於不限制任何前述聲明之前提下，S&amp;P及CBOE在任何情況下，就特殊、懲罰性、間接或衍生之損害(包括利潤之損失)均不負任何責任，縱使已被告知有發生此等損害之可能性者，亦同。 隱私權聲明 使用條款 商標專區 資訊安全政策宣言 個人資料管理政策宣言 營運持續管理聲明 檢舉制度 性騷擾防治申訴.. RSS專區 常見問題 就業資訊 --> ::: 交易資訊 交易資訊 三大法人 大額交易人未沖銷部位結構 每日外幣參考匯率查詢 交易歷史資料申請 資料下載專區 資訊廠商 臺灣期貨交易所行情資訊網站 訊息面暫停交易之股票期貨及選擇權 指數專區 期貨交易資訊觀測站 交易制度 交易制度 費率表 電子交易系統 部位限制 期貨商、期貨交易輔助人及其它名冊 行事曆 股票期貨/選擇權契約相關資訊 交易防衛機制 結算業務 期貨集中交易市場 店頭集中結算 合格集中結算交易對手(QCCP)資訊揭露 量化資訊揭露 統計資料 期貨商交易量日報表 期貨商交易量週報表 期貨商交易量月報表 期貨商交易量年報表 各商品年成交量統計表 市場參與者統計 期貨商市佔率 各類交易人各商品交易量統計表 經紀、自營商交易量統計表 各類交易人交易量統計表 交易人年齡分布統計表 前一月份各商品每日交易量統計表 臺指選擇權波動率指數下載 臺指選擇權波動率指數即時行情 市場統計資料 最新消息 公告 新聞稿 股票期貨/選擇權契約調整 歷史資料區 RSS資訊訂閱服務 隱私權聲明 使用條款 商標專區 資訊安全政策宣言 個人資料管理政策宣言 營運持續管理聲明 檢舉制度 工作場所性騷擾防治.. RS
-
-##### https://www.taifex.com.tw/file/taifex/Dailydownload/vix/log2data/2026/20260717new.txt
-HTTP 200 長度 402
-b'<HTML  xmlns=\'http://www.w3.org/1999/xhtml\' lang=\'zh-TW\'><head><meta http-equiv=\'Content-Type\' content=\'text/html; charset=big5\' /></head>\r\n<title>404</title>\r\n<STYLE type="text/css">\r\nbody{\r\nfont-size:1em;\r\n }\r\n</STYLE>\r\n<body>\r\n<h1>404</h1>\r\n\xb1z\xc2s\xc4\xfd\xaa\xba\xad\xb6\xad\xb1\xbc\xc8\xae\xc9\xb5L\xaak\xaaA\xb0\xc8\xa1A _<br>\r\n\xbd\xd0\xc2I\xbf\xef\xa4U\xa4\xe8\xb3s\xb5\xb2\xa6^\xad\xba\xad\xb6!!'
-
-##### https://www.taifex.com.tw/file/taifex/Dailydownload/vix/log2data/20260717new.txt
-HTTP 200 長度 402
-b'<HTML  xmlns=\'http://www.w3.org/1999/xhtml\' lang=\'zh-TW\'><head><meta http-equiv=\'Content-Type\' content=\'text/html; charset=big5\' /></head>\r\n<title>404</title>\r\n<STYLE type="text/css">\r\nbody{\r\nfont-size:1em;\r\n }\r\n</STYLE>\r\n<body>\r\n<h1>404</h1>\r\n\xb1z\xc2s\xc4\xfd\xaa\xba\xad\xb6\xad\xb1\xbc\xc8\xae\xc9\xb5L\xaak\xaaA\xb0\xc8\xa1A _<br>\r\n\xbd\xd0\xc2I\xbf\xef\xa4U\xa4\xe8\xb3s\xb5\xb2\xa6^\xad\xba\xad\xb6!!'
-
-##### https://www.taifex.com.tw/cht/7/vixDailyDown
-HTTP 200 長度 402
-b'<HTML  xmlns=\'http://www.w3.org/1999/xhtml\' lang=\'zh-TW\'><head><meta http-equiv=\'Content-Type\' content=\'text/html; charset=big5\' /></head>\r\n<title>404</title>\r\n<STYLE type="text/css">\r\nbody{\r\nfont-size:1em;\r\n }\r\n</STYLE>\r\n<body>\r\n<h1>404</h1>\r\n\xb1z\xc2s\xc4\xfd\xaa\xba\xad\xb6\xad\xb1\xbc\xc8\xae\xc9\xb5L\xaak\xaaA\xb0\xc8\xa1A _<br>\r\n\xbd\xd0\xc2I\xbf\xef\xa4U\xa4\xe8\xb3s\xb5\xb2\xa6^\xad\xba\xad\xb6!!'
-
-##### 期交所三大法人下載：3 年區間
-HTTP 200 行數 19
-['<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">', '']
-['    </body>', '</html>']
+##### vixMinNew
+  片段： fileaut VALUE="">
+  片段： filename VALUE="">
+  片段： filetype VALUE="">
+  片段： file/taifex/event/cht/csr/index.html" /> 企業社會責任專區</a></li>
+  片段： file" /> 影音介紹</a></li>
+  片段： file/taifex/event/cht/QCCP/index.html" /> 合格集中結算交易對手(QCCP)資訊揭露</a></li>
+  片段： file/taifex/CHINESE/7/trade_volume.ods" />
+  片段： file/taifex/eng/eng9/Eligible Foreign Exchanges and Contracts Granted by the SFB.ods" />
+  片段： file/taifex/CHINESE/9/臺灣期貨交易所金融市場基本架構資訊揭露報告.pdf" />
+  片段： file/taifex/event/cht/investmentRisk/index.html" /> 期貨交易風險專區</a></li>
+  片段： file/taifex/event/cht/anti_fraud/index.html" /> 期貨反詐騙專區</a></li>
+  片段： file/taifex/event/cht/eLearnPlatform/index_eLearn.html" /> 普惠期權智能學習平台</a></li>
+  片段： file/taifex/event/cht/csr/index.html" /> 企業社會責任專區</a></li>
+  片段： file" /> 影音介紹</a></li>
+  片段： file/taifex/event/cht/QCCP/index.html" /> 合格集中結算交易對手(QCCP)資訊揭露</a></li>
+  片段： file/taifex/CHINESE/7/trade_volume.ods" />
+  片段： file/taifex/eng/eng9/Eligible Foreign Exchanges and Contracts Granted by the SFB.ods" />
+  片段： file/taifex/CHINESE/9/臺灣期貨交易所金融市場基本架構資訊揭露報告.pdf" />
+  片段： file/taifex/event/cht/investmentRisk/index.html" /> 期貨交易風險專區</a></li>
+  片段： file/taifex/event/cht/anti_fraud/index.html" /> 期貨反詐騙專區</a></li>
+  片段： file/taifex/event/cht/eLearnPlatform/index_eLearn.html" /> 普惠期權智能學習平台</a></li>
+  片段： file/taifex/event/cht/newrule2026q2/index.html" target="_blank" >
+  片段： file/taifex/event/cht/sGold/index.html" target="_blank" >
+  片段： file/taifex/event/cht/stc_weekly/index.html" target="_blank" >
+  片段： file/taifex/event/cht/FX_Hedging/index.html" target="_blank" >
+  片段： file/taifex/event/cht/fut_anti_fraud/index.html" target="_blank" >
+  片段： file/taifex/event/cht/anti_fraud/index.html" target="_blank" >
+  片段： file/taifex/event/cht/anti_fraud/index.html" target="_blank" >
+  片段： file/taifex/event/cht/anti_fraud/index.html" target="_blank" >
+  片段： file/taifex/event/cht/anti_fraud/index.html" target="_blank" >
+  片段： file/taifex/CHINESE/7/trade_volume.ods" 
+  片段： file/taifex/event/cht/csr/index.html" -->
+  片段： file" -->
+  片段： file/taifex/CHINESE/9/期交所各部門對外窗口名單.pdf" -->
+  片段： file/taifex/CHINESE/7/trade_volume.ods" 
+  片段： filesname=20261016')"
+  片段： filesname=20261015')"
+  片段： filesname=20261014')"
+  片段： filesname=20261013')"
+  片段： filesname=20261012')"
+  片段： filesname=20261008')"
+  片段： filesname=20261007')"
+  片段： filesname=20261006')"
+  片段： filesname=20261005')"
+  片段： filesname=20261002')"
+  片段： filesname=20261001')"
+  片段： file/taifex/CHINESE/pimp.pdf" class="link-a" title="個人資料管理政策宣言" target="_blank"><font color="white">個人資料管理政策宣言</font></a>
+  片段： file/taifex/CHINESE/bim.pdf" class="link-a" title="營運持續管理聲明" target="_blank"><font color="white">營運持續管理聲明</font></a>
+  片段： file/taifex/CHINESE/WBS-Cht.pdf" class="link-a" title="檢舉制度" target="_blank"><font color="white">檢舉制度</font></a>
+  片段： file/taifex/CHINESE/工作場所性騷擾防治措施、申訴及懲處辦法.pdf" class="link-a" title="性騷擾防治措施、申訴及懲處辦法" target="_blank"><font color="white">性騷擾防治申訴..</font></a>
+  片段： file/taifex/event/cht/QCCP/index.html"
+  片段： file/taifex/CHINESE/7/trade_volume.ods"
+  片段： file/taifex/CHINESE/pimp.pdf"
+  片段： file/taifex/CHINESE/bim.pdf"
+  片段： file/taifex/CHINESE/工作場所性騷擾防治措施辦法.pdf"
+  片段： fileAry = [ "xlsx", "xls", "pdf", "csv", "odt", "odf",
+  片段： fileAry.indexOf(lastPoint) <= -1)) {
+  片段： filename = lastPath.substring(0, indexPoint)
+  片段： fileAry.indexOf(lastPoint) <= -1)) {
+  片段： filename + "(" + lastPoint + ")";
+  日期列數： 11 ['2026/10/16', '2026/10/15', '2026/10/14'] ['2026/10/02', '2026/10/01']
+##### vixDaily3MNew
+  路徑： //www.taifex.com.tw/file/taifex/Dailydownload/vix/log2data/202607new.txt
+  路徑： //www.taifex.com.tw/file/taifex/Dailydownload/vix/log2data/202608new.txt
+  路徑： //www.taifex.com.tw/file/taifex/Dailydownload/vix/log2data/202609new.txt
+  路徑： //www.taifex.com.tw/file/taifex/Dailydownload/vix/log2data/202610new.txt
+  路徑： 202607new.txt
+  路徑： 202608new.txt
+  路徑： 202609new.txt
+  路徑： 202610new.txt
+  片段： fileaut VALUE="">
+  片段： filename VALUE="">
+  片段： filetype VALUE="">
+  片段： file/taifex/event/cht/csr/index.html" /> 企業社會責任專區</a></li>
+  片段： file" /> 影音介紹</a></li>
+  片段： file/taifex/event/cht/QCCP/index.html" /> 合格集中結算交易對手(QCCP)資訊揭露</a></li>
+  片段： file/taifex/CHINESE/7/trade_volume.ods" />
+  片段： file/taifex/eng/eng9/Eligible Foreign Exchanges and Contracts Granted by the SFB.ods" />
+  片段： file/taifex/CHINESE/9/臺灣期貨交易所金融市場基本架構資訊揭露報告.pdf" />
+  片段： file/taifex/event/cht/investmentRisk/index.html" /> 期貨交易風險專區</a></li>
+  片段： file/taifex/event/cht/anti_fraud/index.html" /> 期貨反詐騙專區</a></li>
+  片段： file/taifex/event/cht/eLearnPlatform/index_eLearn.html" /> 普惠期權智能學習平台</a></li>
+  片段： file/taifex/event/cht/csr/index.html" /> 企業社會責任專區</a></li>
+  片段： file" /> 影音介紹</a></li>
+  片段： file/taifex/event/cht/QCCP/index.html" /> 合格集中結算交易對手(QCCP)資訊揭露</a></li>
+  片段： file/taifex/CHINESE/7/trade_volume.ods" />
+  片段： file/taifex/eng/eng9/Eligible Foreign Exchanges and Contracts Granted by the SFB.ods" />
+  片段： file/taifex/CHINESE/9/臺灣期貨交易所金融市場基本架構資訊揭露報告.pdf" />
+  片段： file/taifex/event/cht/investmentRisk/index.html" /> 期貨交易風險專區</a></li>
+  片段： file/taifex/event/cht/anti_fraud/index.html" /> 期貨反詐騙專區</a></li>
+  片段： file/taifex/event/cht/eLearnPlatform/index_eLearn.html" /> 普惠期權智能學習平台</a></li>
+  片段： file/taifex/event/cht/newrule2026q2/index.html" target="_blank" >
+  片段： file/taifex/event/cht/sGold/index.html" target="_blank" >
+  片段： file/taifex/event/cht/stc_weekly/index.html" target="_blank" >
+  片段： file/taifex/event/cht/FX_Hedging/index.html" target="_blank" >
+  片段： file/taifex/event/cht/fut_anti_fraud/index.html" target="_blank" >
+  片段： file/taifex/event/cht/anti_fraud/index.html" target="_blank" >
+  片段： file/taifex/event/cht/anti_fraud/index.html" target="_blank" >
+  片段： file/taifex/event/cht/anti_fraud/index.html" target="_blank" >
+  片段： file/taifex/event/cht/anti_fraud/index.html" target="_blank" >
+  片段： file/taifex/CHINESE/7/trade_volume.ods" 
+  片段： file/taifex/event/cht/csr/index.html" -->
+  片段： file" -->
+  片段： file/taifex/CHINESE/9/期交所各部門對外窗口名單.pdf" -->
+  片段： file/taifex/CHINESE/7/trade_volume.ods" 
+  片段： file/taifex/Dailydownload/vix/log2data/202610new.txt')"
+  片段： file/taifex/Dailydownload/vix/log2data/202609new.txt')"
+  片段： file/taifex/Dailydownload/vix/log2data/202608new.txt')"
+  片段： file/taifex/Dailydownload/vix/log2data/202607new.txt')"
+  片段： file/taifex/CHINESE/pimp.pdf" class="link-a" title="個人資料管理政策宣言" target="_blank"><font color="white">個人資料管理政策宣言</font></a>
+  片段： file/taifex/CHINESE/bim.pdf" class="link-a" title="營運持續管理聲明" target="_blank"><font color="white">營運持續管理聲明</font></a>
+  片段： file/taifex/CHINESE/WBS-Cht.pdf" class="link-a" title="檢舉制度" target="_blank"><font color="white">檢舉制度</font></a>
+  片段： file/taifex/CHINESE/工作場所性騷擾防治措施、申訴及懲處辦法.pdf" class="link-a" title="性騷擾防治措施、申訴及懲處辦法" target="_blank"><font color="white">性騷擾防治申訴..</font></a>
+  片段： file/taifex/event/cht/QCCP/index.html"
+  片段： file/taifex/CHINESE/7/trade_volume.ods"
+  片段： file/taifex/CHINESE/pimp.pdf"
+  片段： file/taifex/CHINESE/bim.pdf"
+  片段： file/taifex/CHINESE/工作場所性騷擾防治措施辦法.pdf"
+  片段： fileAry = [ "xlsx", "xls", "pdf", "csv", "odt", "odf",
+  片段： fileAry.indexOf(lastPoint) <= -1)) {
+  片段： filename = lastPath.substring(0, indexPoint)
+  片段： fileAry.indexOf(lastPoint) <= -1)) {
+  片段： filename + "(" + lastPoint + ")";
+  日期列數： 0 [] []
+##### vixMin3MNew
+  路徑： //www.taifex.com.tw/file/taifex/Dailydownload/vix/logdata/202607歷史紀錄波動率指數_新VIX.zip
+  路徑： //www.taifex.com.tw/file/taifex/Dailydownload/vix/logdata/202608歷史紀錄波動率指數_新VIX.zip
+  路徑： //www.taifex.com.tw/file/taifex/Dailydownload/vix/logdata/202609歷史紀錄波動率指數_新VIX.zip
+  路徑： 202607歷史紀錄波動率指數_新VIX.zip
+  路徑： 202608歷史紀錄波動率指數_新VIX.zip
+  路徑： 202609歷史紀錄波動率指數_新VIX.zip
+  片段： fileaut VALUE="">
+  片段： filename VALUE="">
+  片段： filetype VALUE="">
+  片段： file/taifex/event/cht/csr/index.html" /> 企業社會責任專區</a></li>
+  片段： file" /> 影音介紹</a></li>
+  片段： file/taifex/event/cht/QCCP/index.html" /> 合格集中結算交易對手(QCCP)資訊揭露</a></li>
+  片段： file/taifex/CHINESE/7/trade_volume.ods" />
+  片段： file/taifex/eng/eng9/Eligible Foreign Exchanges and Contracts Granted by the SFB.ods" />
+  片段： file/taifex/CHINESE/9/臺灣期貨交易所金融市場基本架構資訊揭露報告.pdf" />
+  片段： file/taifex/event/cht/investmentRisk/index.html" /> 期貨交易風險專區</a></li>
+  片段： file/taifex/event/cht/anti_fraud/index.html" /> 期貨反詐騙專區</a></li>
+  片段： file/taifex/event/cht/eLearnPlatform/index_eLearn.html" /> 普惠期權智能學習平台</a></li>
+  片段： file/taifex/event/cht/csr/index.html" /> 企業社會責任專區</a></li>
+  片段： file" /> 影音介紹</a></li>
+  片段： file/taifex/event/cht/QCCP/index.html" /> 合格集中結算交易對手(QCCP)資訊揭露</a></li>
+  片段： file/taifex/CHINESE/7/trade_volume.ods" />
+  片段： file/taifex/eng/eng9/Eligible Foreign Exchanges and Contracts Granted by the SFB.ods" />
+  片段： file/taifex/CHINESE/9/臺灣期貨交易所金融市場基本架構資訊揭露報告.pdf" />
+  片段： file/taifex/event/cht/investmentRisk/index.html" /> 期貨交易風險專區</a></li>
+  片段： file/taifex/event/cht/anti_fraud/index.html" /> 期貨反詐騙專區</a></li>
+  片段： file/taifex/event/cht/eLearnPlatform/index_eLearn.html" /> 普惠期權智能學習平台</a></li>
+  片段： file/taifex/event/cht/newrule2026q2/index.html" target="_blank" >
+  片段： file/taifex/event/cht/sGold/index.html" target="_blank" >
+  片段： file/taifex/event/cht/stc_weekly/index.html" target="_blank" >
+  片段： file/taifex/event/cht/FX_Hedging/index.html" target="_blank" >
+  片段： file/taifex/event/cht/fut_anti_fraud/index.html" target="_blank" >
+  片段： file/taifex/event/cht/anti_fraud/index.html" target="_blank" >
+  片段： file/taifex/event/cht/anti_fraud/index.html" target="_blank" >
+  片段： file/taifex/event/cht/anti_fraud/index.html" target="_blank" >
+  片段： file/taifex/event/cht/anti_fraud/index.html" target="_blank" >
+  片段： file/taifex/CHINESE/7/trade_volume.ods" 
+  片段： file/taifex/event/cht/csr/index.html" -->
+  片段： file" -->
+  片段： file/taifex/CHINESE/9/期交所各部門對外窗口名單.pdf" -->
+  片段： file/taifex/CHINESE/7/trade_volume.ods" 
+  片段： file/taifex/Dailydownload/vix/logdata/202609歷史紀錄波動率指數_新VIX.zip')"
+  片段： file/taifex/Dailydownload/vix/logdata/202608歷史紀錄波動率指數_新VIX.zip')"
+  片段： file/taifex/Dailydownload/vix/logdata/202607歷史紀錄波動率指數_新VIX.zip')"
+  片段： file/taifex/CHINESE/pimp.pdf" class="link-a" title="個人資料管理政策宣言" target="_blank"><font color="white">個人資料管理政策宣言</font></a>
+  片段： file/taifex/CHINESE/bim.pdf" class="link-a" title="營運持續管理聲明" target="_blank"><font color="white">營運持續管理聲明</font></a>
+  片段： file/taifex/CHINESE/WBS-Cht.pdf" class="link-a" title="檢舉制度" target="_blank"><font color="white">檢舉制度</font></a>
+  片段： file/taifex/CHINESE/工作場所性騷擾防治措施、申訴及懲處辦法.pdf" class="link-a" title="性騷擾防治措施、申訴及懲處辦法" target="_blank"><font color="white">性騷擾防治申訴..</font></a>
+  片段： file/taifex/event/cht/QCCP/index.html"
+  片段： file/taifex/CHINESE/7/trade_volume.ods"
+  片段： file/taifex/CHINESE/pimp.pdf"
+  片段： file/taifex/CHINESE/bim.pdf"
+  片段： file/taifex/CHINESE/工作場所性騷擾防治措施辦法.pdf"
+  片段： fileAry = [ "xlsx", "xls", "pdf", "csv", "odt", "odf",
+  片段： fileAry.indexOf(lastPoint) <= -1)) {
+  片段： filename = lastPath.substring(0, indexPoint)
+  片段： fileAry.indexOf(lastPoint) <= -1)) {
+  片段： filename + "(" + lastPoint + ")";
+  日期列數： 0 [] []
+https://www.taifex.com.tw/file/taifex/Dailydownload/vix/log2data/202607new.txt 200 890 b'\xa5\xe6\xa9\xf6\xa4\xe9\xb4\xc1\t\xae\xc9\xb6\xa1(\xae\xc9/\xa4\xc0/\xac\xed/\xb2@\xac\xed)\t\xbbO\xab\xfc\xbf\xef\xbe\xdc\xc5v\xaai\xb0\xca\xb2v\xab\xfc\xbc\xc6\t\xa6\xac\xbdL\xabe1\xa4\xc0\xc4\xc1\xa5\xad\xa7\xa1\xab\xfc\xbc\xc6\r\n--------\t'
+https://www.taifex.com.tw/file/taifex/Dailydownload/vix/log2data/2026/202607new.txt 200 402 b"<HTML  xmlns='http://www.w3.org/1999/xhtml' lang='zh-TW'><head><meta http-equiv="
+https://www.taifex.com.tw/file/taifex/Dailydownload/vix/log2data/202607new.zip 200 402 b"<HTML  xmlns='http://www.w3.org/1999/xhtml' lang='zh-TW'><head><meta http-equiv="
+https://www.taifex.com.tw/file/taifex/Dailydownload/vix/log2data/2026/202607new.zip 200 402 b"<HTML  xmlns='http://www.w3.org/1999/xhtml' lang='zh-TW'><head><meta http-equiv="
