@@ -31,6 +31,36 @@ TW_GROUPS = {
 }
 
 
+# 絕對水位：依各指標長期歷史常態設定的參考點（數值 → 0~100 分）
+# 只看近 2 年百分位，平靜期稍有波動就會被誇大，所以與絕對水位各占一半
+ANCHORS = {
+    "VIX": [(12, 0), (16, 30), (20, 55), (25, 75), (30, 85), (40, 95), (50, 100)],
+    "VIX期限結構": [(0.80, 0), (0.88, 40), (0.95, 65), (1.00, 80), (1.10, 95), (1.20, 100)],
+    "MOVE": [(60, 0), (80, 25), (100, 50), (120, 75), (150, 92), (180, 100)],
+    "HY利差": [(2.5, 0), (3.5, 20), (4.5, 50), (5.5, 70), (7, 85), (9, 95), (12, 100)],
+    "IG利差": [(0.7, 0), (1.0, 20), (1.3, 50), (1.6, 70), (2.0, 85), (3.0, 97), (4.0, 100)],
+    "JNK/IEF回撤": [(0, 0), (0.02, 30), (0.05, 60), (0.08, 80), (0.12, 95), (0.20, 100)],
+    "臺指VIX": [(12, 0), (16, 25), (20, 50), (25, 70), (30, 82), (40, 95), (50, 100)],
+    "融資維持率": [(130, 100), (135, 97), (145, 85), (155, 70), (165, 50), (175, 30), (190, 0)],
+    "融資10日變化": [(-12, 100), (-8, 90), (-5, 75), (-2, 55), (0, 40), (3, 20), (6, 0)],
+    "外資期貨10日變化": [(-30000, 100), (-15000, 80), (-5000, 60), (0, 45), (10000, 20), (25000, 0)],
+    "跌破季線比例": [(20, 0), (40, 30), (55, 55), (70, 80), (85, 95), (95, 100)],
+}
+
+
+def anchor(s, name):
+    xs, ys = zip(*ANCHORS[name])
+    return pd.Series(np.interp(s, xs, ys), index=s.index).where(s.notna())
+
+
+def blend(s, name, invert=False):
+    """相對水位（近 2 年百分位）與絕對水位各半；百分位尚未暖機前不給分"""
+    p = pct_rank(s)
+    if invert:
+        p = 100 - p
+    return (p + anchor(s, name).reindex(p.index)) / 2
+
+
 def pct_rank(s):
     """當天數值在過去 WIN 天（含當天）中的百分位 0~100"""
     s = s.dropna()
@@ -64,12 +94,12 @@ def score_us(us):
     ratio = us["JNK"] / us["IEF"]
     term = us["VIX"] / us["VIX3M"]
     c = pd.DataFrame(index=us.index)
-    c["HY利差"] = pct_rank(us["HY_OAS"])
-    c["IG利差"] = pct_rank(us["IG_OAS"])
-    c["JNK/IEF回撤"] = pct_rank(1 - ratio / ratio.rolling(252, min_periods=60).max())
-    c["VIX"] = pct_rank(us["VIX"])
-    c["VIX期限結構"] = pct_rank(term)
-    c["MOVE"] = pct_rank(us["MOVE"])
+    c["HY利差"] = blend(us["HY_OAS"], "HY利差")
+    c["IG利差"] = blend(us["IG_OAS"], "IG利差")
+    c["JNK/IEF回撤"] = blend(1 - ratio / ratio.rolling(252, min_periods=60).max(), "JNK/IEF回撤")
+    c["VIX"] = blend(us["VIX"], "VIX")
+    c["VIX期限結構"] = blend(term, "VIX期限結構")
+    c["MOVE"] = blend(us["MOVE"], "MOVE")
     score, g = weighted(c, US_GROUPS)
 
     # 退潮訊號：近 20 天曾「真恐慌」→ 期限結構回正 ＋ 利差收斂
@@ -92,11 +122,11 @@ def score_us(us):
 def score_tw(tw):
     tw = tw[tw["TAIEX"].notna()].copy()
     c = pd.DataFrame(index=tw.index)
-    c["融資維持率(反向)"] = 100 - pct_rank(tw["margin_maint"])
-    c["融資10日變化(反向)"] = 100 - pct_rank(tw["margin_amt_k"].pct_change(10))
-    c["臺指VIX"] = pct_rank(tw["tvix"])
-    c["外資期貨淨空單10日變化"] = 100 - pct_rank(tw["fut_foreign_net_oi"].diff(10))
-    c["跌破季線比例"] = pct_rank(tw["below_ma60_pct"])
+    c["融資維持率(反向)"] = blend(tw["margin_maint"], "融資維持率", invert=True)
+    c["融資10日變化(反向)"] = blend(tw["margin_amt_k"].pct_change(10) * 100, "融資10日變化", invert=True)
+    c["臺指VIX"] = blend(tw["tvix"], "臺指VIX")
+    c["外資期貨淨空單10日變化"] = blend(tw["fut_foreign_net_oi"].diff(10), "外資期貨10日變化", invert=True)
+    c["跌破季線比例"] = blend(tw["below_ma60_pct"], "跌破季線比例")
     score, g = weighted(c, TW_GROUPS)
 
     # 退潮訊號（近 20 天分數曾 ≥ 60 才檢查）
