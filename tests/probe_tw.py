@@ -1,62 +1,25 @@
 # -*- coding: utf-8 -*-
-"""探測台股歷史資料端點格式"""
-import json, re, time, requests
+"""探測臺指VIX日資料、期交所下載區間上限"""
+import re, requests
 UA = {"User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0 Safari/537.36"}
-D = "20260717"
+h = requests.get("https://www.taifex.com.tw/cht/7/vixDaily3MNew", headers=UA, timeout=30).text
+print("##### vixDaily3MNew 頁面長度", len(h))
+for l in sorted(set(re.findall(r'(?:href|action|src|value)="([^"]+)"', h))):
+    if re.search(r"vix|down|txt|csv|zip|Dailydownload", l, re.I): print("  ", l)
+txt = re.sub(r"<script.*?</script>|<style.*?</style>", "", h, flags=re.S)
+txt = re.sub(r"<[^>]+>", " ", txt); txt = re.sub(r"\s+", " ", txt)
+i = txt.find("VIX"); print("文字片段：", txt[max(0,i-200):i+1500])
 
-def twse(url):
-    r = requests.get(url, headers=UA, timeout=30); time.sleep(3)
-    return r.json()
+for url in ["https://www.taifex.com.tw/file/taifex/Dailydownload/vix/log2data/2026/20260717new.txt",
+            "https://www.taifex.com.tw/file/taifex/Dailydownload/vix/log2data/20260717new.txt",
+            "https://www.taifex.com.tw/cht/7/vixDailyDown"]:
+    try:
+        r = requests.get(url, headers=UA, timeout=30)
+        print(f"\n##### {url}\nHTTP {r.status_code} 長度 {len(r.content)}\n{r.content[:300]!r}")
+    except Exception as e: print(url, e)
 
-def show_twse(name, j):
-    print(f"\n##### {name}")
-    print("頂層鍵：", list(j.keys()))
-    if "tables" in j:
-        for t in j["tables"]:
-            print(f"-- 表：{t.get('title')}｜欄位：{t.get('fields')}")
-            for row in (t.get("data") or [])[:3]:
-                print("   ", row)
-            print(f"   （共 {len(t.get('data') or [])} 列）")
-    else:
-        print("欄位：", j.get("fields")); 
-        for row in (j.get("data") or [])[:3]: print("   ", row)
-        print(f"   （共 {len(j.get('data') or [])} 列）")
-        for k in ["creditFields", "creditList"]:
-            if k in j: print(k, str(j[k])[:300])
-
-for name, url in [
-    ("MI_MARGN MS", f"https://www.twse.com.tw/rwd/zh/marginTrading/MI_MARGN?date={D}&selectType=MS&response=json"),
-    ("MI_MARGN ALL", f"https://www.twse.com.tw/rwd/zh/marginTrading/MI_MARGN?date={D}&selectType=ALL&response=json"),
-    ("MI_INDEX ALLBUT0999", f"https://www.twse.com.tw/rwd/zh/afterTrading/MI_INDEX?date={D}&type=ALLBUT0999&response=json"),
-    ("FMTQIK 月成交與指數", f"https://www.twse.com.tw/rwd/zh/afterTrading/FMTQIK?date={D}&response=json"),
-]:
-    try: show_twse(name, twse(url))
-    except Exception as e: print(f"\n##### {name} 失敗 {type(e).__name__} {e}")
-
-print("\n##### 期交所 三大法人期貨區間下載 TXF")
-try:
-    r = requests.post("https://www.taifex.com.tw/cht/3/futContractsDateDown", headers=UA, timeout=30,
-                      data={"queryStartDate": "2026/07/01", "queryEndDate": "2026/07/31", "commodityId": "TXF"})
-    for enc in ["utf-8", "big5", "cp950"]:
-        try: txt = r.content.decode(enc); break
-        except: continue
-    print("HTTP", r.status_code, "編碼", enc, "長度", len(txt)); print(txt[:900])
-except Exception as e: print("失敗", e)
-
-print("\n##### 期交所 OpenAPI swagger 中與 VIX / 三大法人 相關的路徑")
-try:
-    sw = requests.get("https://openapi.taifex.com.tw/swagger.json", headers=UA, timeout=30).json()
-    for p, v in sw.get("paths", {}).items():
-        s = json.dumps(v, ensure_ascii=False)
-        if re.search(r"VIX|波動率|Institutional|法人", p + s, re.I):
-            print(p, "｜", (v.get("get", {}).get("summary") or "")[:60])
-except Exception as e: print("失敗", e)
-
-print("\n##### 期交所 vixMinNew 頁面中的連結")
-try:
-    h = requests.get("https://www.taifex.com.tw/cht/7/vixMinNew", headers=UA, timeout=30).text
-    links = sorted(set(re.findall(r'(?:href|action|src)="([^"]+)"', h)))
-    for l in links:
-        if re.search(r"vix|down|file|csv|txt", l, re.I): print("  ", l)
-    for m in re.finditer(r"<form[^>]*>", h): print("  FORM", m.group(0)[:200])
-except Exception as e: print("失敗", e)
+print("\n##### 期交所三大法人下載：3 年區間")
+r = requests.post("https://www.taifex.com.tw/cht/3/futContractsDateDown", headers=UA, timeout=60,
+                  data={"queryStartDate": "2023/10/01", "queryEndDate": "2026/10/16", "commodityId": "TXF"})
+t = r.content.decode("big5", errors="replace"); lines = t.strip().splitlines()
+print("HTTP", r.status_code, "行數", len(lines)); print(lines[:2]); print(lines[-2:])
