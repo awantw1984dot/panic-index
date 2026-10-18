@@ -1,0 +1,11 @@
+[O] yfinance ^VIX｜23 筆，最新 19.99
+[O] yfinance ^VIX3M｜22 筆，最新 20.50
+[O] yfinance ^MOVE｜21 筆，最新 101.10
+[O] yfinance JNK｜22 筆，最新 92.28
+[O] yfinance IEF｜22 筆，最新 90.42
+[O] yfinance ^GSPC｜22 筆，最新 7659.44
+[O] CBOE VIX｜HTTP 200，9297 行，最後一行 10/16/2026,16.020000,22.310000,15.720000,19.990000
+[O] CBOE VIX3M｜HTTP 200，4297 行，最後一行 10/16/2026,18.200000,21.650000,18.090000,20.500000
+[X] FRED csv 長逾時｜ReadTimeout
+[X] FRED API(無金鑰)｜HTTP 400，開頭 '{"error_code":400,"error_message":"Bad Request.  Variable api_key is n'
+[X] FRED 下載頁｜ReadTimeout
