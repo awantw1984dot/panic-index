@@ -1,15 +1,11 @@
-import io, zipfile, requests, urllib.parse
-UA = {"User-Agent": "Mozilla/5.0"}
-for ym in ["202310", "202407", "202504", "202601", "202606"]:
-    fn = urllib.parse.quote(f"{ym}歷史紀錄波動率指數_新VIX.zip")
-    for base in ["logdata", "logdata/" + ym[:4]]:
-        u = f"https://www.taifex.com.tw/file/taifex/Dailydownload/vix/{base}/{fn}"
-        r = requests.get(u, headers=UA, timeout=60)
-        ok = r.content[:2] == b"PK"
-        print(ym, base, r.status_code, len(r.content), "ZIP" if ok else "非ZIP")
-        if ok:
-            z = zipfile.ZipFile(io.BytesIO(r.content))
-            names = z.namelist(); print("  檔案：", names[:5], len(names))
-            t = z.read(names[0]).decode("big5", errors="replace")
-            print("  開頭：", repr(t[:300])); print("  結尾：", repr(t[-200:]))
-            break
+# 測試 CBOE 備援：故意把 yfinance 的 VIX 清掉，看能否補回
+import sys; sys.path.insert(0, "src")
+import pandas as pd
+import fetch_us as F
+df = F.fetch_yf()
+orig = df["VIX"].copy()
+df.loc[df.index[-30:], "VIX"] = float("nan")
+df = F.fill_from_cboe(df)
+diff = (df["VIX"] - orig).abs().loc[orig.index[-30:]]
+print("補回筆數", df["VIX"].loc[orig.index[-30:]].notna().sum(), "/ 30，最大差異", round(diff.max(), 4))
+print(df[["VIX", "VIX3M"]].tail(3))
