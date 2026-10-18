@@ -9,6 +9,7 @@ import requests
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 DATA = os.environ.get("DATA_DIR") or os.path.join(ROOT, "data")
+os.makedirs(DATA, exist_ok=True)
 START = dt.date.fromisoformat(os.environ.get("START_DATE", "2023-10-01"))   # 只保留近 3 年
 UA = {"User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 "
                     "(KHTML, like Gecko) Chrome/124.0 Safari/537.36"}
