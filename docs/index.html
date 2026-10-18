@@ -181,10 +181,47 @@ function dayCard(D,i,{compact=false}={}){
 }
 
 function trend(D){
-  const tw=D.tw.slice(-60);
-  return `<div class="card"><div class="row"><span class="h">近 60 日走勢</span>
-    <span class="legend" style="margin:0"><span style="color:var(--tw)">— 台股</span><span style="color:var(--us)">— 美股</span></span></div>
-    ${lineChart([{data:tw.map(x=>x.score),color:"var(--tw)"},{data:tw.map(x=>x.us_score),color:"var(--us)"}])}</div>`;
+  const tw=D.tw.slice(-60),n=tw.length,W=320,H=110,X=i=>n<2?0:i*(W/(n-1)),Y=v=>H-4-(v/100)*(H-12);
+  const line=(k,c)=>`<polyline fill="none" stroke="${c}" stroke-width="1.6" points="${tw.map((x,i)=>x[k]==null?"":X(i)+","+Y(x[k])).join(" ")}"/>`;
+  const md=d=>d.slice(5).replace("-","/");
+  const ticks=[0,Math.floor((n-1)/2),n-1].map(i=>`<text x="${X(i)}" y="${H+14}" font-size="10" fill="var(--text3)" text-anchor="${i===0?"start":i===n-1?"end":"middle"}">${md(tw[i].date)}</text>`).join("");
+  const box=document.createElement("div");
+  box.className="card";
+  box.innerHTML=`<div class="row"><span class="h">近 60 日走勢</span>
+      <span class="legend" style="margin:0"><span style="color:var(--tw)">— 台股</span><span style="color:var(--us)">— 美股</span></span></div>
+    <div class="row" style="margin:8px 0 0;font-size:13px;font-variant-numeric:tabular-nums">
+      <span id="tr-d" style="font-weight:600"></span><span id="tr-q" class="muted" style="font-size:13px"></span></div>
+    <div style="font-size:13px;margin:2px 0;font-variant-numeric:tabular-nums">
+      <span style="color:var(--tw)">台股 <b id="tr-t"></b></span>　<span style="color:var(--us)">美股 <b id="tr-u"></b></span></div>
+    <svg viewBox="0 0 ${W} ${H+18}" id="tr-svg" style="touch-action:pan-y;cursor:crosshair" role="img" aria-label="近 60 日台股與美股分數走勢">
+      <rect x="0" y="${Y(100)}" width="${W}" height="${Y(80)-Y(100)}" fill="var(--red)" opacity=".08"/>
+      <line x1="0" x2="${W}" y1="${Y(60)}" y2="${Y(60)}" stroke="var(--line)" stroke-dasharray="3 3"/>
+      <text x="${W-2}" y="${Y(60)-3}" text-anchor="end" font-size="10" fill="var(--text3)">60</text>
+      ${line("score","var(--tw)")}${line("us_score","var(--us)")}
+      <line id="tr-x" y1="0" y2="${H}" stroke="var(--text2)" stroke-width=".8" stroke-dasharray="3 2"/>
+      <circle id="tr-ct" r="3.5" fill="var(--tw)"/><circle id="tr-cu" r="3.5" fill="var(--us)"/>
+      ${ticks}
+    </svg><div class="tiny" style="text-align:center;margin-top:2px">在圖上點按或左右滑動查看每天的分數</div>`;
+  const q=id=>box.querySelector("#"+id), svg=q("tr-svg");
+  function show(i){
+    const x=tw[i];
+    q("tr-d").textContent=x.date.replace(/-/g,"/");q("tr-q").textContent=x.quadrant||"";
+    q("tr-t").textContent=r0(x.score)+" "+zone(x.score); q("tr-u").textContent=r0(x.us_score)+" "+zone(x.us_score);
+    for(const [id,v] of [["tr-x",null],["tr-ct",x.score],["tr-cu",x.us_score]]){
+      const e=q(id);
+      if(id==="tr-x"){e.setAttribute("x1",X(i));e.setAttribute("x2",X(i));continue}
+      if(v==null){e.setAttribute("r",0);continue}
+      e.setAttribute("r",3.5);e.setAttribute("cx",X(i));e.setAttribute("cy",Y(v));
+    }
+  }
+  function at(ev){
+    const r=svg.getBoundingClientRect(),fx=(ev.clientX-r.left)/r.width;
+    show(Math.max(0,Math.min(n-1,Math.round(fx*(n-1)))));
+  }
+  svg.addEventListener("pointerdown",at);
+  svg.addEventListener("pointermove",ev=>{if(ev.pointerType!=="mouse"||ev.buttons)at(ev)});
+  show(n-1);
+  return box;
 }
 
 function replay(D){
@@ -229,7 +266,8 @@ fetch("data.json?"+Date.now()).then(r=>r.json()).then(D=>{
   document.getElementById("updated").textContent=D.updated+" 更新";
   const app=document.getElementById("app");
   if(!D.tw.length){app.innerHTML='<p class="err">還沒有分數資料</p>';return}
-  app.innerHTML=dayCard(D,D.tw.length-1)+trend(D);
+  app.innerHTML=dayCard(D,D.tw.length-1);
+  app.appendChild(trend(D));
   app.appendChild(replay(D));
 }).catch(e=>{document.getElementById("app").innerHTML='<p class="err">資料載入失敗：'+esc(e.message)+'</p>'});
 </script>
