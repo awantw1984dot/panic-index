@@ -87,7 +87,7 @@ const r0=v=>v==null?"—":Math.round(v);
 const fx=(v,d=1)=>v==null||isNaN(v)?"—":Number(v).toFixed(d);
 const esc=s=>String(s).replace(/[&<>]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;"}[c]));
 const EVENTS=[
-  {name:"2026/7 AI 股修正",from:"2026-06-20",to:"2026-08-31",notes:{"2026-07-17":"單日跌 2,953 點，史上最大跌點","2026-07-28":"再跌 2,030 點，史上第三大跌點"}},
+  {name:"2026/7 AI 股修正",from:"2026-06-20",to:"2026-08-31",notes:{"2026-07-16":"台積電法說會","2026-07-17":"法說會隔天，單日跌 2,953 點，史上最大跌點","2026-07-28":"再跌 2,030 點，史上第三大跌點"}},
   {name:"2025/4 關稅",from:"2025-03-15",to:"2025-05-31",notes:{"2025-04-07":"關稅衝擊，台股連假後開盤重挫"}},
 ];
 
@@ -206,9 +206,11 @@ function eventsCard(D){
   const wd="日一二三四五六";
   const rows=list.map(e=>{
     const d=new Date(e.date+"T12:00:00Z"),dst=usDST(d),md=e.date.slice(5).replace("-","/");
-    const when=e.name.startsWith("FOMC")?`台灣時間隔天凌晨 ${dst?"2":"3"}:00`:`台灣時間 ${dst?"20":"21"}:30`;
-    return `<div class="row" style="font-size:13px;padding:3px 0"><span><b>${md}</b>（${wd[d.getUTCDay()]}）${e.name}</span><span class="tiny">${when}</span></div>`;}).join("");
-  return `<div class="card" style="padding:10px 16px"><div class="tiny" style="margin-bottom:2px">未來 7 天重要事件（美東日期）・公布前後容易出現波動</div>${rows}</div>`;
+    const tw=e.market==="tw";
+    const when=tw?`台灣 ${e.time||""} 盤後`:e.name.startsWith("FOMC")?`台灣隔天凌晨 ${dst?"2":"3"}:00`:`台灣 ${dst?"20":"21"}:30`;
+    const tag=tw?"台":"美";
+    return `<div class="row" style="font-size:13px;padding:3px 0"><span><span class="pill" style="font-size:11px;padding:1px 6px;margin-right:6px;background:var(--sub);color:var(--text2)">${tag}</span><b>${md}</b>（${wd[d.getUTCDay()]}）${e.name}${e.estimated?'<span class="tiny">（預估）</span>':""}</span><span class="tiny">${when}</span></div>`;}).join("");
+  return `<div class="card" style="padding:10px 16px"><div class="tiny" style="margin-bottom:2px">未來 7 天重要事件・公布前後容易出現波動</div>${rows}</div>`;
 }
 
 function dayCard(D,i,{compact=false}={}){

@@ -204,11 +204,13 @@ def main():
         "quadrant": quadrant(tw_out.at[d, "score"], us_on_tw[d])})
     us_rows = rows(us_out, us_raw)
     site = os.path.join(ROOT, "docs"); os.makedirs(site, exist_ok=True)
-    cal = []   # 經濟數據公布日（fetch_us.py 產生）
-    ep = os.path.join(DATA, "events.json")
-    if os.path.exists(ep):
-        with open(ep, encoding="utf-8") as f:
-            cal = json.load(f)
+    cal = []   # 經濟數據公布日（fetch_us.py 產生）＋手動維護的事件（台積電法說會等）
+    for fn in ["events.json", "manual_events.json"]:
+        ep = os.path.join(DATA, fn)
+        if os.path.exists(ep):
+            with open(ep, encoding="utf-8") as f:
+                cal += json.load(f)
+    cal = sorted(cal, key=lambda e: e["date"])
     data = {"updated": pd.Timestamp.now(tz="Asia/Taipei").strftime("%Y-%m-%d %H:%M"),
             "tw": tw_rows, "us": us_rows, "events": cal}
     with open(os.path.join(site, "data.json"), "w", encoding="utf-8") as f:

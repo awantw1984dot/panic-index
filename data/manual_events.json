@@ -1,0 +1,7 @@
+[
+ {"date": "2026-01-15", "name": "台積電法說會", "market": "tw", "time": "14:00"},
+ {"date": "2026-04-16", "name": "台積電法說會", "market": "tw", "time": "14:00"},
+ {"date": "2026-07-16", "name": "台積電法說會", "market": "tw", "time": "14:00"},
+ {"date": "2026-10-15", "name": "台積電法說會", "market": "tw", "time": "14:00"},
+ {"date": "2027-01-14", "name": "台積電法說會", "market": "tw", "time": "14:00", "estimated": true}
+]
