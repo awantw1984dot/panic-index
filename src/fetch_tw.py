@@ -87,10 +87,16 @@ def fetch_futures(start, end):
     out = {}
     for m in months(start, end):
         last = min(dt.date(m.year + (m.month == 12), m.month % 12 + 1, 1) - dt.timedelta(days=1), end)
-        r = get("https://www.taifex.com.tw/cht/3/futContractsDateDown", method="POST", wait=2,
-                data={"queryStartDate": f"{max(m, start):%Y/%m/%d}", "queryEndDate": f"{last:%Y/%m/%d}",
-                      "commodityId": "TXF"})
-        txt = r.content.decode("big5", errors="replace")
+        for back in range(6):
+            e = last - dt.timedelta(days=back)
+            if e < max(m, start):
+                break
+            r = get("https://www.taifex.com.tw/cht/3/futContractsDateDown", method="POST", wait=2,
+                    data={"queryStartDate": f"{max(m, start):%Y/%m/%d}", "queryEndDate": f"{e:%Y/%m/%d}",
+                          "commodityId": "TXF"})
+            txt = r.content.decode("big5", errors="replace")
+            if txt.startswith("日期"):
+                break
         if not txt.startswith("日期"):
             print(f"  期貨 {m:%Y-%m} 無資料"); continue
         df = pd.read_csv(io.StringIO(txt))
@@ -107,7 +113,9 @@ def fetch_tvix(start, end):
         txt = r.content.decode("big5", errors="replace")
         rows = re.findall(r"^(\d{8}|\d{4}/\d{2}/\d{2})\t[^\t]*\t([\d.]+)", txt, flags=re.M)
         if not rows:
-            missing.append(f"{m:%Y-%m}"); continue
+            missing.append(f"{m:%Y-%m}")
+            print(f"  臺指VIX {m:%Y-%m} 原始內容：{txt[:400]!r}")
+            continue
         for d, v in rows:
             out[pd.Timestamp(d.replace("/", ""))] = float(v)
     if missing:
