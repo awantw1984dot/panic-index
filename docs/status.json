@@ -1,5 +1,5 @@
 {
- "updated": "2026-10-18 12:52",
+ "updated": "2026-10-18 12:58",
  "tw_date": "2026-10-16",
  "us_date": "2026-10-16",
  "tw_score": 51,
@@ -7,6 +7,8 @@
  "us_score": 62,
  "us_zone": "開始打折",
  "quadrant": "預警",
+ "tw_exit": false,
+ "us_exit": false,
  "events": [
   "美股原價→開始打折",
   "狀態→預警"

@@ -196,28 +196,40 @@ def main():
     with open(os.path.join(site, "data.json"), "w", encoding="utf-8") as f:
         json.dump(data, f, ensure_ascii=False, separators=(",", ":"))
 
-    # 給 iPhone 捷徑讀取的精簡狀態：只在狀態改變時才有 events
-    t, p = tw_rows[-1], (tw_rows[-2] if len(tw_rows) > 1 else None)
-    u, up = us_rows[-1], (us_rows[-2] if len(us_rows) > 1 else None)
+    # 給 iPhone 捷徑讀取的精簡狀態：與「上一次產生的 status.json」比較，只在狀態改變時才有 events
+    # （不比較最近兩個交易日，否則早上只更新美股時，會把前一晚已通知的台股變化再通知一次）
+    t, u = tw_rows[-1], us_rows[-1]
+    sp = os.path.join(site, "status.json")
+    prev = {}
+    if os.path.exists(sp):
+        try:
+            with open(sp, encoding="utf-8") as f:
+                prev = json.load(f)
+        except Exception:
+            prev = {}
+    if not prev.get("tw_zone"):   # 第一次產生：改和前一個交易日比較
+        p, up = (tw_rows[-2] if len(tw_rows) > 1 else t), (us_rows[-2] if len(us_rows) > 1 else u)
+        prev = {"tw_zone": p["zone"], "us_zone": up["zone"], "quadrant": p["quadrant"],
+                "tw_exit": p["退潮"], "us_exit": up["退潮"]}
     events = []
-    if t["退潮"] and not (p and p["退潮"]):
+    if t["退潮"] and not prev.get("tw_exit"):
         events.append("台股可以進場搶購")
-    if p and t["zone"] != p["zone"]:
-        events.append(f"台股{p['zone']}→{t['zone']}")
-    if up and u["zone"] != up["zone"]:
-        events.append(f"美股{up['zone']}→{u['zone']}")
-    if p and t["quadrant"] != p["quadrant"]:
+    if t["zone"] != prev.get("tw_zone"):
+        events.append(f"台股{prev.get('tw_zone')}→{t['zone']}")
+    if u["zone"] != prev.get("us_zone"):
+        events.append(f"美股{prev.get('us_zone')}→{u['zone']}")
+    if t["quadrant"] != prev.get("quadrant"):
         events.append(f"狀態→{t['quadrant']}")
-    if u["退潮"] and not (up and up["退潮"]):
+    if u["退潮"] and not prev.get("us_exit"):
         events.append("美股退潮訊號觸發")
     status = {"updated": data["updated"], "tw_date": t["date"], "us_date": u["date"],
               "tw_score": round(t["score"]), "tw_zone": t["zone"], "us_score": round(u["score"]), "us_zone": u["zone"],
-              "quadrant": t["quadrant"], "events": events,
+              "quadrant": t["quadrant"], "tw_exit": t["退潮"], "us_exit": u["退潮"], "events": events,
               "summary": f"台股 {t['score']:.0f} {t['zone']}｜美股 {u['score']:.0f} {u['zone']}｜{t['quadrant']}",
               # 給捷徑通知用：標題放重點，內容一行；沒有事件時 body 為空字串
               "title": f"{t['quadrant']}｜台股 {t['score']:.0f}・美股 {u['score']:.0f}",
               "body": "，".join(events)}
-    with open(os.path.join(site, "status.json"), "w", encoding="utf-8") as f:
+    with open(sp, "w", encoding="utf-8") as f:
         json.dump(status, f, ensure_ascii=False, indent=1)
     print("通知事件：", events or "無")
 
