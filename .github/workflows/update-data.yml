@@ -38,10 +38,10 @@ jobs:
           mkdir -p logs && mv logs_*.txt logs/ 2>/dev/null || true
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          mkdir -p /tmp/keep && cp -r --parents data logs site /tmp/keep/ 2>/dev/null || true
+          mkdir -p /tmp/keep && cp -r --parents data logs docs /tmp/keep/ 2>/dev/null || true
           git fetch -q origin main && git reset -q --hard origin/main
           cp -r /tmp/keep/. . 
-          git add data logs site
+          git add data logs docs
           git commit -q -m "自動存檔 [skip ci]" || echo "無變更"
           git push -q
 

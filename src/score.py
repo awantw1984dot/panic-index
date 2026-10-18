@@ -135,7 +135,8 @@ def main():
         recs = []
         for d in out.index[out["score"].notna()]:
             r = {"date": d.strftime("%Y-%m-%d"), "score": round(float(out.at[d, "score"]), 1),
-                 "zone": zone(out.at[d, "score"]), "退潮": bool(out.at[d, "退潮"])}
+                 "zone": zone(out.at[d, "score"]), "退潮": bool(out.at[d, "退潮"]),
+                 "recent": bool(out.at[d, "近期恐慌" if "近期恐慌" in out else "近期真恐慌"])}
             r["groups"] = {k[2:]: (None if pd.isna(v) else round(float(v), 1))
                            for k, v in out.loc[d].items() if k.startswith("組_")}
             r["indicators"] = {k[3:]: (None if pd.isna(v) else round(float(v), 1))
@@ -151,7 +152,7 @@ def main():
         "us_score": None if pd.isna(us_on_tw[d]) else round(float(us_on_tw[d]), 1),
         "quadrant": quadrant(tw_out.at[d, "score"], us_on_tw[d])})
     us_rows = rows(us_out, us_raw)
-    site = os.path.join(ROOT, "site"); os.makedirs(site, exist_ok=True)
+    site = os.path.join(ROOT, "docs"); os.makedirs(site, exist_ok=True)
     data = {"updated": pd.Timestamp.now(tz="Asia/Taipei").strftime("%Y-%m-%d %H:%M"),
             "tw": tw_rows, "us": us_rows}
     with open(os.path.join(site, "data.json"), "w", encoding="utf-8") as f:
