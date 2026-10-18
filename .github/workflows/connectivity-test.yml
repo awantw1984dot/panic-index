@@ -26,6 +26,12 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
+          mkdir -p /tmp/keep && cp -r --parents tests/*result*.txt /tmp/keep/ 2>/dev/null || true
+          git fetch -q origin main && git reset -q --hard origin/main
+          cp -r /tmp/keep/. . 
+          git add tests/*result*.txt
+          git commit -q -m "自動存檔 [skip ci]" || echo "無變更"
+          git push -q
           git add tests/*result*.txt
           git commit -m "連線測試結果 [skip ci]" || echo "無變更"
           git push

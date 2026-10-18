@@ -10,6 +10,10 @@ on:
 permissions:
   contents: write
 
+concurrency:
+  group: test-fetch
+  cancel-in-progress: true
+
 jobs:
   test:
     runs-on: ubuntu-latest
@@ -33,6 +37,10 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
+          mkdir -p /tmp/keep && cp -r --parents tests/fetch_test_result.txt /tmp/keep/ 2>/dev/null || true
+          git fetch -q origin main && git reset -q --hard origin/main
+          cp -r /tmp/keep/. . 
           git add tests/fetch_test_result.txt
-          git commit -m "抓取程式測試結果 [skip ci]" || true
-          git pull --rebase -q && git push
+          git commit -q -m "自動存檔 [skip ci]" || echo "無變更"
+          git push -q
+
