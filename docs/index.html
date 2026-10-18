@@ -224,6 +224,26 @@ function trend(D){
   return box;
 }
 
+function guide(D){
+  const freq=arr=>{const v=arr.map(x=>x.score).filter(x=>x!=null),c=[0,0,0,0];v.forEach(x=>c[x>=80?3:x>=60?2:x>=20?1:0]++);return c.map(k=>Math.round(k/v.length*100))};
+  const ft=freq(D.tw),fu=freq(D.us);
+  const rows=[["漲價中","0–20","市場過度樂觀，東西都很貴，別追高"],["原價","20–60","大部分時候都在這裡，照平常紀律操作"],
+              ["開始打折","60–80","恐慌升溫，準備購物清單，先不出手"],["特賣會","80–100","極度恐慌，人潮洶湧，別擠第一波，等退潮訊號"]];
+  const peak=(arr,e)=>{const x=arr.filter(r=>r.date>=e.from&&r.date<=e.to&&r.score!=null);if(!x.length)return "—";const m=x.reduce((a,b)=>b.score>a.score?b:a);return `${Math.round(m.score)}（${m.date.slice(5).replace("-","/")}）`};
+  const box=document.createElement("details");box.className="fold";
+  box.innerHTML=`<summary><span class="h">分數怎麼看</span><span class="row" style="gap:8px"><span class="tiny when-closed">區間與歷史參考</span><span class="tiny when-open">收起</span><span class="chev">▶</span></span></summary>
+  <div class="body"><div class="card">
+    <div class="tiny" style="margin-bottom:6px">分數越高＝恐慌越深＝折扣越大。灰字是近 ${Math.round(D.tw.length/250*10)/10} 年各區間出現的天數比例</div>
+    ${rows.map(([z,r,t],i)=>`<div style="display:grid;grid-template-columns:78px 1fr;gap:4px 10px;padding:9px 0;border-top:${i?".5px solid var(--line)":"none"}">
+      <div><span class="pill z-${z}">${z}</span><div class="tiny" style="margin-top:4px">${r}</div></div>
+      <div style="font-size:13px;line-height:1.55">${t}<div class="tiny">台股 ${ft[i]}%・美股 ${fu[i]}% 的日子</div></div></div>`).join("")}
+    <div class="sep"><div class="h" style="font-size:14px;margin-bottom:4px">歷史參考：股災時最高到幾分</div>
+      ${EVENTS.map(e=>`<div style="font-size:13px;padding:4px 0"><div>${e.name}</div><div class="muted" style="font-size:13px;font-variant-numeric:tabular-nums">台股 ${peak(D.tw,e)}　美股 ${peak(D.us,e)}</div></div>`).join("")}
+      <div class="note">分數是相對過去兩年＋長期常態的綜合評估，不是跌幅。到達特賣會不代表已經最便宜，真正的進場訊號是「退潮訊號」全部觸發。</div></div>
+  </div></div>`;
+  return box;
+}
+
 function replay(D){
   const box=document.createElement("details");
   box.className="fold";
@@ -268,6 +288,7 @@ fetch("data.json?"+Date.now()).then(r=>r.json()).then(D=>{
   if(!D.tw.length){app.innerHTML='<p class="err">還沒有分數資料</p>';return}
   app.innerHTML=dayCard(D,D.tw.length-1);
   app.appendChild(trend(D));
+  app.appendChild(guide(D));
   app.appendChild(replay(D));
 }).catch(e=>{document.getElementById("app").innerHTML='<p class="err">資料載入失敗：'+esc(e.message)+'</p>'});
 </script>
