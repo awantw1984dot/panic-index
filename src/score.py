@@ -265,6 +265,7 @@ def main():
     events = []
     if stale and stale != prev.get("stale"):
         events.append("資料停更：" + "、".join(stale))
+    if t["退潮"] and not prev.get("tw_exit"):
         events.append("台股可以進場搶購")
     if t["zone"] != prev.get("tw_zone"):
         events.append(f"台股{prev.get('tw_zone')}→{t['zone']}")
