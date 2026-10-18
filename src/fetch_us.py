@@ -22,6 +22,30 @@ def fetch_yf():
     return df
 
 
+def fetch_cboe(name):
+    """CBOE 官方 CSV（VIX、VIX3M 備援來源）"""
+    import io
+    r = get(f"https://cdn.cboe.com/api/global/us_indices/daily_prices/{name}_History.csv", wait=0.5)
+    d = pd.read_csv(io.StringIO(r.text))
+    d.index = pd.to_datetime(d.iloc[:, 0], format="%m/%d/%Y")
+    return d["CLOSE"].rename(name)[lambda x: x.index >= pd.Timestamp(START)]
+
+
+def fill_from_cboe(df):
+    """yfinance 缺值或落後時，用 CBOE 補上（容錯）"""
+    for col in ["VIX", "VIX3M"]:
+        try:
+            last_all = df.dropna(how="all").index.max()
+            last_col = df[col].dropna().index.max() if col in df and df[col].notna().any() else None
+            if last_col is None or last_col < last_all or df[col].isna().mean() > 0.02:
+                c = fetch_cboe(col)
+                df[col] = df[col].combine_first(c) if col in df else c
+                print(f"  {col} 以 CBOE 補值（yfinance 不完整）")
+        except Exception as e:
+            print(f"  {col} CBOE 備援失敗：{e}")
+    return df
+
+
 def fetch_fred(key):
     out = {}
     for sid, col in FRED.items():
@@ -66,7 +90,13 @@ def main():
     key = os.environ.get("FRED_API_KEY")
     if not key:
         sys.exit("缺少 FRED_API_KEY")
-    a, b = fetch_yf(), fetch_fred(key)
+    try:
+        a = fetch_yf()
+    except Exception as e:
+        print(f"  yfinance 失敗：{e}")
+        a = pd.DataFrame()
+    a = fill_from_cboe(a)
+    b = fetch_fred(key)
     df = a.join(b, how="outer")
     df = df.dropna(how="all")
     df = save_merge("us_daily.csv", df)

@@ -94,14 +94,16 @@ const EVENTS=[
 function ma(arr,i,n){if(i<n-1)return null;let s=0;for(let k=i-n+1;k<=i;k++){if(arr[k]==null)return null;s+=arr[k]}return s/n}
 
 function action(t,i,tw){
-  if(t.退潮)return "可以進場搶購：台股退潮訊號全部觸發，分批買進";
+  if(t.退潮)return "可以進場搶購：台股退潮訊號全部觸發。分批進場，個股以投信、三大法人方向確認後再買";
   const idx=tw.map(x=>x.raw.TAIEX), m=ma(idx,i,60), above=m!=null&&idx[i]>m;
   const ma60=m==null?"":(above?"TAIEX 站上 MA60":"TAIEX 跌破 MA60");
   switch(t.quadrant){
     case "本土事件":return `${ma60} ＋ 本土事件 → 美股穩住，準備購物清單，等台股退潮訊號再分批進場`;
     case "預警":return `${ma60} ＋ 預警 → 美股先恐慌、台股可能還沒反應：暫停加碼、檢查停損`;
     case "系統性恐慌":return `${ma60} ＋ 系統性恐慌 → 全面特賣但人潮洶湧，別擠第一波，等退潮訊號`;
-    default:return above?`${ma60} ＋ 正常環境 → 照平常紀律操作`:`${ma60} ＋ 正常環境 → 大盤在季線下，維持防守`;
+    default:
+      if(t.score!=null&&t.score<20)return `${ma60} ＋ 台股漲價中 → 市場偏熱，別追高，依減碼紀律檢視獲利部位`;
+      return above?`${ma60} ＋ 正常環境 → 照平常紀律操作`:`${ma60} ＋ 正常環境 → 大盤在季線下，維持防守`;
   }
 }
 
@@ -213,6 +215,17 @@ function eventsCard(D){
   return `<div class="card" style="padding:10px 16px"><div class="tiny" style="margin-bottom:2px">未來 7 天重要事件・公布前後容易出現波動</div>${rows}</div>`;
 }
 
+const IND_NAME={"融資維持率(反向)":"融資維持率","融資10日變化(反向)":"融資 10 日","臺指VIX":"臺指 VIX","外資期貨淨空單10日變化":"外資期貨","跌破季線比例":"跌破季線","HY利差":"HY 利差","IG利差":"IG 利差","JNK/IEF回撤":"JNK/IEF","VIX":"VIX","VIX期限結構":"期限結構","MOVE":"MOVE"};
+const missTag=r=>r&&r.missing&&r.missing.length?`<div class="tiny" style="color:var(--amber);margin-top:4px">本日缺少：${r.missing.map(k=>IND_NAME[k]||k).join("、")}，分數只用其餘指標計算</div>`:"";
+function staleBanner(D){
+  const now=new Date(new Date().toLocaleString("en-US",{timeZone:"Asia/Taipei"}));
+  const bdays=d=>{let n=0,x=new Date(d+"T12:00:00");x.setDate(x.getDate()+1);while(x<=now){const w=x.getDay();if(w&&w<6)n++;x.setDate(x.getDate()+1)}return n};
+  const tw=D.tw.at(-1),us=D.us.at(-1),msg=[];
+  if(bdays(tw.date)>2)msg.push(`台股資料停在 ${tw.date.slice(5)}`);
+  if(bdays(us.date)>3)msg.push(`美股資料停在 ${us.date.slice(5)}`);
+  return msg.length?`<div class="card" style="border:1.5px solid var(--red);background:var(--red-bg);color:var(--red);font-size:13px;line-height:1.6"><b>資料停更</b>：${msg.join("、")}。分數可能已過期，請勿依此判斷，並檢查 GitHub 專案的 Actions 頁面。</div>`:"";
+}
+
 function dayCard(D,i,{compact=false}={}){
   const tw=D.tw,t=tw[i];
   const usRow=D.us.filter(u=>u.date<=t.date).slice(-1)[0];
@@ -239,11 +252,11 @@ function dayCard(D,i,{compact=false}={}){
   ${compact?"":eventsCard(D)}`;
   if(compact)return html+`<div class="card"><div class="h">台股退潮訊號：${twc.title}</div><div class="checks">${twc.html}</div></div>`;
   html+=`
-  <div class="card"><div class="row"><span class="h">台股指標</span><span class="tiny">百分位 / 數值　${t.date}</span></div>
+  <div class="card"><div class="row"><span class="h">台股指標</span><span class="tiny">百分位 / 數值　${t.date}</span></div>${missTag(t)}
     <div class="ind">${indRows(twInd(tw,i))}</div>
     <div class="sep"><div class="h" style="font-size:14px">台股退潮訊號：${twc.title}</div><div class="checks">${twc.html}</div></div>${helpBox(HELP_TW)}</div>`;
   if(usRow)html+=`
-  <div class="card"><div class="row"><span class="h">美股指標</span><span class="tiny">${usRow.date}</span></div>
+  <div class="card"><div class="row"><span class="h">美股指標</span><span class="tiny">${usRow.date}</span></div>${missTag(usRow)}
     <div class="ind">${indRows(usInd(usRow))}</div>
     <div class="sep"><div class="h" style="font-size:14px">美股退潮訊號：${usc.title}</div><div class="checks">${usc.html}</div></div>
     <div class="sep row" style="font-size:13px"><span class="muted" style="font-size:13px">交叉驗證 STLFSI</span><span>${fx(usRow.raw.STLFSI,2)} ${usRow.raw.STLFSI==null?"":usRow.raw.STLFSI>1?"偏高":usRow.raw.STLFSI>0?"略高":"正常"}</span></div>${helpBox(HELP_US)}</div>`;
@@ -356,7 +369,7 @@ fetch("data.json?"+Date.now()).then(r=>r.json()).then(D=>{
   document.getElementById("updated").textContent=D.updated+" 更新";
   const app=document.getElementById("app");
   if(!D.tw.length){app.innerHTML='<p class="err">還沒有分數資料</p>';return}
-  app.innerHTML=dayCard(D,D.tw.length-1);
+  app.innerHTML=staleBanner(D)+dayCard(D,D.tw.length-1);
   app.appendChild(trend(D));
   app.appendChild(guide(D));
   app.appendChild(replay(D));

@@ -49,6 +49,27 @@ ANCHORS = {
 }
 
 
+# 合理範圍：超出視為來源異常（格式改版、抓錯欄位），當作缺值並記錄
+VALID = {
+    "VIX": (5, 150), "VIX3M": (5, 150), "MOVE": (20, 400), "HY_OAS": (0.5, 25), "IG_OAS": (0.2, 8),
+    "JNK": (20, 300), "IEF": (20, 300), "STLFSI": (-5, 15), "SPX": (500, 50000),
+    "TAIEX": (5000, 200000), "margin_maint": (100, 400), "margin_amt_k": (1e7, 5e9),
+    "tvix": (5, 150), "below_ma60_pct": (0, 100), "fut_foreign_net_oi": (-500000, 500000),
+}
+ANOMALIES = []
+
+
+def sanitize(df, label):
+    df = df.copy()
+    for c, (lo, hi) in VALID.items():
+        if c in df:
+            bad = df[c].notna() & ~df[c].between(lo, hi)
+            if bad.any():
+                ANOMALIES.append(f"{label} {c}：{int(bad.sum())} 筆超出 {lo}～{hi}（最近 {df.index[bad].max().date()}）")
+                df.loc[bad, c] = np.nan
+    return df
+
+
 def anchor(s, name):
     xs, ys = zip(*ANCHORS[name])
     return pd.Series(np.interp(s, xs, ys), index=s.index).where(s.notna())
@@ -100,7 +121,7 @@ def weighted(comp, groups):
 
 # ---------------- 美股 ----------------
 def score_us(us):
-    us = us.copy()
+    us = sanitize(us, "美股")
     trade = us["VIX"].notna()
     us[["HY_OAS", "IG_OAS", "STLFSI"]] = us[["HY_OAS", "IG_OAS", "STLFSI"]].ffill(limit=10)
     us = us[trade]
@@ -133,6 +154,7 @@ def score_us(us):
 
 # ---------------- 台股 ----------------
 def score_tw(tw):
+    tw = sanitize(tw, "台股")
     tw = tw[tw["TAIEX"].notna()].copy()
     c = pd.DataFrame(index=tw.index)
     c["融資維持率(反向)"] = blend(tw["margin_maint"], "融資維持率", invert=True)
@@ -192,6 +214,7 @@ def main():
                            for k, v in out.loc[d].items() if k.startswith("組_")}
             r["indicators"] = {k[3:]: (None if pd.isna(v) else round(float(v), 1))
                                for k, v in out.loc[d].items() if k.startswith("指標_")}
+            r["missing"] = [k for k, v in r["indicators"].items() if v is None]
             r["signals"] = {k[3:]: (None if pd.isna(v) else bool(v)) for k, v in out.loc[d].items() if k.startswith("訊號_")}
             r["raw"] = {k: (None if pd.isna(v) else round(float(v), 4)) for k, v in raw.loc[d].items()}
             if extra is not None:
@@ -231,8 +254,17 @@ def main():
         p, up = (tw_rows[-2] if len(tw_rows) > 1 else t), (us_rows[-2] if len(us_rows) > 1 else u)
         prev = {"tw_zone": p["zone"], "us_zone": up["zone"], "quadrant": p["quadrant"],
                 "tw_exit": p["退潮"], "us_exit": up["退潮"]}
+    # 資料停更：最新資料距今超過 2 個交易日（週末不算）
+    today = pd.Timestamp.now(tz="Asia/Taipei").tz_localize(None).normalize()
+    lag = lambda d: len(pd.bdate_range(pd.Timestamp(d) + pd.Timedelta(days=1), today)) - 1
+    stale = []
+    if lag(t["date"]) > 2:
+        stale.append(f"台股停在 {t['date'][5:]}")
+    if lag(u["date"]) > 3:
+        stale.append(f"美股停在 {u['date'][5:]}")
     events = []
-    if t["退潮"] and not prev.get("tw_exit"):
+    if stale and stale != prev.get("stale"):
+        events.append("資料停更：" + "、".join(stale))
         events.append("台股可以進場搶購")
     if t["zone"] != prev.get("tw_zone"):
         events.append(f"台股{prev.get('tw_zone')}→{t['zone']}")
@@ -249,7 +281,7 @@ def main():
         events.append(f"美股升溫：5日+{u['chg5']:.0f}")
     status = {"updated": data["updated"], "tw_date": t["date"], "us_date": u["date"],
               "tw_score": round(t["score"]), "tw_zone": t["zone"], "us_score": round(u["score"]), "us_zone": u["zone"],
-              "quadrant": t["quadrant"], "tw_exit": t["退潮"], "us_exit": u["退潮"], "tw_heat": t["heat"], "us_heat": u["heat"],
+              "quadrant": t["quadrant"], "tw_exit": t["退潮"], "us_exit": u["退潮"], "stale": stale, "anomalies": ANOMALIES[-5:], "tw_heat": t["heat"], "us_heat": u["heat"],
               "tw_heat_date": t["date"] if t["heat_start"] else prev.get("tw_heat_date"),
               "us_heat_date": u["date"] if u["heat_start"] else prev.get("us_heat_date"), "events": events,
               "summary": f"台股 {t['score']:.0f} {t['zone']}｜美股 {u['score']:.0f} {u['zone']}｜{t['quadrant']}",
@@ -259,6 +291,7 @@ def main():
     with open(sp, "w", encoding="utf-8") as f:
         json.dump(status, f, ensure_ascii=False, indent=1)
     print("通知事件：", events or "無")
+    print("資料異常：", ANOMALIES or "無")
 
     for name, out in [("美股", us_out), ("台股", tw_out)]:
         s = out["score"].dropna()
