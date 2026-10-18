@@ -200,20 +200,23 @@ def main():
     t, p = tw_rows[-1], (tw_rows[-2] if len(tw_rows) > 1 else None)
     u, up = us_rows[-1], (us_rows[-2] if len(us_rows) > 1 else None)
     events = []
-    if p and t["zone"] != p["zone"]:
-        events.append(f"台股{t['zone']} {t['score']:.0f}（原本{p['zone']}）")
-    if up and u["zone"] != up["zone"]:
-        events.append(f"美股{u['zone']} {u['score']:.0f}（原本{up['zone']}）")
-    if p and t["quadrant"] != p["quadrant"]:
-        events.append(f"狀態改為{t['quadrant']}")
     if t["退潮"] and not (p and p["退潮"]):
-        events.append("台股可以進場搶購：退潮訊號觸發")
+        events.append("台股可以進場搶購")
+    if p and t["zone"] != p["zone"]:
+        events.append(f"台股{p['zone']}→{t['zone']}")
+    if up and u["zone"] != up["zone"]:
+        events.append(f"美股{up['zone']}→{u['zone']}")
+    if p and t["quadrant"] != p["quadrant"]:
+        events.append(f"狀態→{t['quadrant']}")
     if u["退潮"] and not (up and up["退潮"]):
         events.append("美股退潮訊號觸發")
     status = {"updated": data["updated"], "tw_date": t["date"], "us_date": u["date"],
               "tw_score": round(t["score"]), "tw_zone": t["zone"], "us_score": round(u["score"]), "us_zone": u["zone"],
               "quadrant": t["quadrant"], "events": events,
-              "summary": f"台股 {t['score']:.0f} {t['zone']}｜美股 {u['score']:.0f} {u['zone']}｜{t['quadrant']}"}
+              "summary": f"台股 {t['score']:.0f} {t['zone']}｜美股 {u['score']:.0f} {u['zone']}｜{t['quadrant']}",
+              # 給捷徑通知用：標題放重點，內容一行；沒有事件時 body 為空字串
+              "title": f"{t['quadrant']}｜台股 {t['score']:.0f}・美股 {u['score']:.0f}",
+              "body": "，".join(events)}
     with open(os.path.join(site, "status.json"), "w", encoding="utf-8") as f:
         json.dump(status, f, ensure_ascii=False, indent=1)
     print("通知事件：", events or "無")
