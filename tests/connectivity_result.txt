@@ -1,0 +1,27 @@
+測試日期：20261016　執行時間（UTC）：2026-10-18 00:23
+
+[X] 美股｜Yahoo VIX｜異常（HTTP 429，無預期內容）
+      回應開頭：Too Many Requests 
+[X] 美股｜Yahoo VIX3M｜異常（HTTP 429，無預期內容）
+      回應開頭：Too Many Requests 
+[X] 美股｜Yahoo MOVE｜異常（HTTP 429，無預期內容）
+      回應開頭：Too Many Requests 
+[X] 美股｜FRED HY利差｜失敗：ReadTimeout
+      回應開頭：HTTPSConnectionPool(host='fred.stlouisfed.org', port=443): Read timed out. (read
+[X] 美股｜FRED IG利差｜失敗：ReadTimeout
+      回應開頭：HTTPSConnectionPool(host='fred.stlouisfed.org', port=443): Read timed out. (read
+[X] 美股｜FRED STLFSI｜失敗：ReadTimeout
+      回應開頭：HTTPSConnectionPool(host='fred.stlouisfed.org', port=443): Read timed out. (read
+[O] 台股｜證交所 融資融券彙總｜通過
+[O] 台股｜證交所 個股融資(全部)｜通過
+[O] 台股｜證交所 全市場收盤價｜通過
+[O] 台股｜證交所 OpenAPI｜通過
+[O] 台股｜櫃買中心｜通過
+[O] 台股｜期交所 三大法人期貨｜通過
+[O] 台股｜期交所 OpenAPI｜通過
+[O] 台股｜期交所 臺指VIX｜通過
+
+=== 總結 ===
+美股：0/6 通過
+台股：8/8 通過
+未通過：Yahoo VIX、Yahoo VIX3M、Yahoo MOVE、FRED HY利差、FRED IG利差、FRED STLFSI
