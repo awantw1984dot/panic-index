@@ -238,7 +238,7 @@ function dayCard(D,i,{compact=false}={}){
   <div class="grid2" style="margin-top:${compact?10:0}px">
     <div class="tile ${hl}"><div class="muted">台股 · 怎麼做</div><div class="big">${r0(t.score)}</div>
       <span class="pill z-${zone(t.score)}">${zone(t.score)}</span>
-      <div class="tiny" style="margin-top:6px">${dTw==null?"":"較前日 "+(dTw>0?"+":"")+Math.round(dTw)}</div>${heatTag(t)}</div>
+      <div class="tiny" style="margin-top:6px">台股資料 ${t.date.slice(5)}${dTw==null?"":"・較前日 "+(dTw>0?"+":"")+Math.round(dTw)}</div>${heatTag(t)}</div>
     <div class="tile ${t.us_score>=60?"hl"+(t.us_score>=80?" red":""):""}"><div class="muted">美股 · 怎麼看</div><div class="big">${r0(t.us_score)}</div>
       <span class="pill z-${zone(t.us_score)}">${zone(t.us_score)}</span>
       <div class="tiny" style="margin-top:6px">${usRow?"美股資料 "+usRow.date.slice(5):""}</div>${heatTag(usRow)}</div>
