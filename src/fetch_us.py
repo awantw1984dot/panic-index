@@ -4,6 +4,7 @@ import json
 import os
 import sys
 import datetime as dt
+from zoneinfo import ZoneInfo
 
 import pandas as pd
 import yfinance as yf
@@ -87,6 +88,20 @@ def fetch_events(key):
     print("近期事件：", [f"{e['date']} {e['name']}" for e in out if e["date"] <= str(today + dt.timedelta(days=21))])
 
 
+def unclosed_from(now=None):
+    """美股尚未收盤（美東 16:30 前）時，回傳當天日期；之後的列都是盤中價，不可使用"""
+    et = (now or dt.datetime.now(dt.timezone.utc)).astimezone(ZoneInfo("America/New_York"))
+    return pd.Timestamp(et.date()) if et.time() < dt.time(16, 30) else None
+
+
+def drop_unclosed(df, now=None):
+    """移除美股當天未收盤的盤中資料（台北晚上更新時美股正在交易）；隔天早上收盤後再收進來"""
+    cut = unclosed_from(now)
+    if cut is None or df.empty:
+        return df
+    return df[df.index < cut]
+
+
 def main():
     key = os.environ.get("FRED_API_KEY")
     if not key:
@@ -96,7 +111,7 @@ def main():
     except Exception as e:
         print(f"  yfinance 失敗：{e}")
         a = pd.DataFrame()
-    a = fill_from_cboe(a)
+    a = drop_unclosed(fill_from_cboe(a))
     b = fetch_fred(key)
     # ICE 利差（HY、IG）依授權僅供內部使用：另存 data/fred_ice.csv（不提交到公開 repo），不寫進 us_daily.csv
     ice = b[[c for c in ICE if c in b]]
@@ -105,8 +120,9 @@ def main():
     df = a.join(b.drop(columns=ICE, errors="ignore"), how="outer")
     df = df.dropna(how="all")
     df = save_merge("us_daily.csv", df)
-    if any(c in df for c in ICE):   # 移除舊檔殘留的 ICE 欄位
-        df = df.drop(columns=ICE, errors="ignore")
+    clean = drop_unclosed(df.drop(columns=ICE, errors="ignore"))   # 移除舊檔殘留的 ICE 欄位與盤中列
+    if len(clean) != len(df) or any(c in df for c in ICE):
+        df = clean
         df.to_csv(os.path.join(DATA, "us_daily.csv"), float_format="%.6g")
     print(f"美股資料：{len(df)} 列，{df.index.min().date()} ～ {df.index.max().date()}")
     print("各欄最新值：")
