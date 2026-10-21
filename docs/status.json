@@ -1,10 +1,10 @@
 {
- "updated": "2026-10-21 02:03",
+ "updated": "2026-10-21 09:53",
  "tw_date": "2026-10-20",
- "us_date": "2026-10-19",
+ "us_date": "2026-10-20",
  "tw_score": 64,
  "tw_zone": "開始打折",
- "us_score": 58,
+ "us_score": 56,
  "us_zone": "原價",
  "quadrant": "本土事件",
  "tw_exit": false,
@@ -16,7 +16,7 @@
  "tw_heat_date": null,
  "us_heat_date": "2026-10-16",
  "events": [],
- "summary": "台股 64 開始打折｜美股 58 原價｜本土事件",
- "title": "本土事件｜台股 64・美股 58",
+ "summary": "台股 64 開始打折｜美股 56 原價｜本土事件",
+ "title": "本土事件｜台股 64・美股 56",
  "body": ""
 }
