@@ -14,6 +14,53 @@ import pandas as pd
 
 from common import DATA, ROOT, load_csv
 
+TW_READY = (21, 0)    # 台股融資資料約台北 21:00 公布
+US_READY_MIN = 30     # 美股收盤後 30 分鐘才視為已有收盤資料
+
+
+def expected_dates(now=None):
+    """依交易所行事曆推算「此刻應該已經有」的最新交易日（台股、美股）；行事曆套件不可用時回傳 (None, None)"""
+    now = now if now is not None else pd.Timestamp.now(tz="UTC")
+    try:
+        import exchange_calendars as xc
+    except Exception:
+        return None, None
+    tpe = now.tz_convert("Asia/Taipei")
+    d = pd.Timestamp(tpe.date())
+    xtai = xc.get_calendar("XTAI")
+    sess = xtai.sessions_in_range(d - pd.Timedelta(days=20), d)
+    if len(sess) and sess[-1] == d and (tpe.hour, tpe.minute) < TW_READY:
+        sess = sess[:-1]
+    tw_exp = sess[-1] if len(sess) else None
+    xnys = xc.get_calendar("XNYS")
+    et_d = pd.Timestamp(now.tz_convert("America/New_York").date())
+    us_exp = None
+    for s in reversed(xnys.sessions_in_range(et_d - pd.Timedelta(days=20), et_d)):
+        if xnys.session_close(s) + pd.Timedelta(minutes=US_READY_MIN) <= now:
+            us_exp = s
+            break
+    return tw_exp, us_exp
+
+
+def freshness(tw_date, us_date, now=None):
+    """最新資料日期是否落後於「應有」的交易日；回傳提醒文字清單（空清單 = 資料都是最新）"""
+    tw_exp, us_exp = expected_dates(now)
+    md = lambda s: str(s)[5:10].replace("-", "/")
+    msgs = []
+    if tw_exp is None and us_exp is None:   # 沒有行事曆時退回舊規則：超過 2／3 個營業日
+        today = (now if now is not None else pd.Timestamp.now(tz="UTC")).tz_convert("Asia/Taipei").tz_localize(None).normalize()
+        lag = lambda x: len(pd.bdate_range(pd.Timestamp(x) + pd.Timedelta(days=1), today)) - 1
+        if lag(tw_date) > 2:
+            msgs.append(f"台股停在 {md(tw_date)}")
+        if lag(us_date) > 3:
+            msgs.append(f"美股停在 {md(us_date)}")
+        return msgs
+    if tw_exp is not None and pd.Timestamp(tw_date) < tw_exp:
+        msgs.append(f"台股缺 {md(tw_exp.date())} 資料（停在 {md(tw_date)}）")
+    if us_exp is not None and pd.Timestamp(us_date) < us_exp:
+        msgs.append(f"美股缺 {md(us_exp.date())} 收盤資料（停在 {md(us_date)}）")
+    return msgs
+
 WIN, MINP = 504, 252          # 百分位視窗約 2 年，至少 1 年資料才給分
 PANIC = 60                    # 四格判斷：≥60 視為恐慌側
 HEAT = 15                     # 升溫警示：5 個交易日上升 ≥15 分，且分數在 40～80 之間
@@ -237,8 +284,9 @@ def main():
             with open(ep, encoding="utf-8") as f:
                 cal += json.load(f)
     cal = sorted(cal, key=lambda e: e["date"])
+    stale = freshness(tw_rows[-1]["date"], us_rows[-1]["date"])   # 依交易所行事曆檢查資料是否缺日
     data = {"updated": pd.Timestamp.now(tz="Asia/Taipei").strftime("%Y-%m-%d %H:%M"),
-            "tw": tw_rows, "us": us_rows, "events": cal}
+            "tw": tw_rows, "us": us_rows, "events": cal, "stale": stale}
     with open(os.path.join(site, "data.json"), "w", encoding="utf-8") as f:
         json.dump(data, f, ensure_ascii=False, separators=(",", ":"))
 
@@ -257,17 +305,9 @@ def main():
         p, up = (tw_rows[-2] if len(tw_rows) > 1 else t), (us_rows[-2] if len(us_rows) > 1 else u)
         prev = {"tw_zone": p["zone"], "us_zone": up["zone"], "quadrant": p["quadrant"],
                 "tw_exit": p["退潮"], "us_exit": up["退潮"]}
-    # 資料停更：最新資料距今超過 2 個交易日（週末不算）
-    today = pd.Timestamp.now(tz="Asia/Taipei").tz_localize(None).normalize()
-    lag = lambda d: len(pd.bdate_range(pd.Timestamp(d) + pd.Timedelta(days=1), today)) - 1
-    stale = []
-    if lag(t["date"]) > 2:
-        stale.append(f"台股停在 {t['date'][5:]}")
-    if lag(u["date"]) > 3:
-        stale.append(f"美股停在 {u['date'][5:]}")
     events = []
-    if stale and stale != prev.get("stale"):
-        events.append("資料停更：" + "、".join(stale))
+    if stale and stale != prev.get("stale"):   # stale 已在上方依交易所行事曆算出
+        events.append("資料未更新：" + "、".join(stale))
     if t["退潮"] and not prev.get("tw_exit"):
         events.append("台股可以進場搶購")
     if t["zone"] != prev.get("tw_zone"):

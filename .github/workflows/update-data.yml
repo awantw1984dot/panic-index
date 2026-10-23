@@ -23,7 +23,13 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
-      - run: pip install pandas requests yfinance
+      - run: pip install pandas requests yfinance exchange_calendars==4.13.2
+      - name: 還原 ICE 利差快取（不公開）
+        uses: actions/cache@v4
+        with:
+          path: data/fred_ice.csv
+          key: fred-ice-${{ github.run_id }}
+          restore-keys: fred-ice-
       - name: 美股
         run: |
           set -o pipefail
@@ -42,6 +48,7 @@ jobs:
         if: always()
         run: bash .github/save.sh "更新資料"
       - name: 計算分數
+        if: always()
         run: |
           set -o pipefail
           python src/score.py 2>&1 | tee logs/score.txt

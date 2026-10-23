@@ -112,11 +112,17 @@ def main():
         print(f"  yfinance 失敗：{e}")
         a = pd.DataFrame()
     a = drop_unclosed(fill_from_cboe(a))
-    b = fetch_fred(key)
-    # ICE 利差（HY、IG）依授權僅供內部使用：另存 data/fred_ice.csv（不提交到公開 repo），不寫進 us_daily.csv
-    ice = b[[c for c in ICE if c in b]]
-    ice.index.name = "date"
-    ice.to_csv(os.path.join(DATA, "fred_ice.csv"), float_format="%.6g")
+    failed = []
+    try:
+        b = fetch_fred(key)
+        # ICE 利差（HY、IG）依授權僅供內部使用：另存 data/fred_ice.csv（不提交到公開 repo），不寫進 us_daily.csv
+        ice = b[[c for c in ICE if c in b]]
+        ice.index.name = "date"
+        ice.to_csv(os.path.join(DATA, "fred_ice.csv"), float_format="%.6g")
+    except Exception as e:   # FRED 失敗：沿用上次快取的利差，其餘資料照常保存，最後以失敗結束
+        print(f"  FRED 失敗：{e}")
+        failed.append("FRED")
+        b = pd.DataFrame()
     df = a.join(b.drop(columns=ICE, errors="ignore"), how="outer")
     df = df.dropna(how="all")
     df = save_merge("us_daily.csv", df)
@@ -128,7 +134,12 @@ def main():
     print("各欄最新值：")
     print(df.ffill().iloc[-1].round(3).to_string())
     print("缺值數：", df.isna().sum().to_dict())
-    fetch_events(key)
+    try:
+        fetch_events(key)
+    except Exception as e:   # 經濟數據日程不影響分數
+        print(f"  事件日程失敗：{e}")
+    if failed:
+        sys.exit(f"美股部分資料取得失敗：{'、'.join(failed)}")
 
 
 if __name__ == "__main__":

@@ -220,10 +220,21 @@ const missTag=r=>r&&r.missing&&r.missing.length?`<div class="tiny" style="color:
 function staleBanner(D){
   const now=new Date(new Date().toLocaleString("en-US",{timeZone:"Asia/Taipei"}));
   const bdays=d=>{let n=0,x=new Date(d+"T12:00:00");x.setDate(x.getDate()+1);while(x<=now){const w=x.getDay();if(w&&w<6)n++;x.setDate(x.getDate()+1)}return n};
-  const tw=D.tw.at(-1),us=D.us.at(-1),msg=[];
-  if(bdays(tw.date)>2)msg.push(`台股資料停在 ${tw.date.slice(5)}`);
-  if(bdays(us.date)>3)msg.push(`美股資料停在 ${us.date.slice(5)}`);
-  return msg.length?`<div class="card" style="border:1.5px solid var(--red);background:var(--red-bg);color:var(--red);font-size:13px;line-height:1.6"><b>資料停更</b>：${msg.join("、")}。分數可能已過期，請勿依此判斷，並檢查 GitHub 專案的 Actions 頁面。</div>`:"";
+  const tw=D.tw.at(-1),us=D.us.at(-1);
+  let msg=D.stale;   // 伺服器依交易所行事曆算出的缺日提醒
+  if(!msg){msg=[];if(bdays(tw.date)>2)msg.push(`台股資料停在 ${tw.date.slice(5)}`);if(bdays(us.date)>3)msg.push(`美股資料停在 ${us.date.slice(5)}`);}
+  // 排程延遲：最近一次「應已執行」的更新（週一～五 21:43、週二～六 07:43，給 30 分鐘緩衝）還沒跑
+  const runs=[];
+  for(let k=0;k<4;k++){const d=new Date(now);d.setDate(d.getDate()-k);const w=d.getDay();
+    const e=new Date(d);e.setHours(21,43,0,0);if(w>=1&&w<=5)runs.push(e);
+    const m=new Date(d);m.setHours(7,43,0,0);if(w>=2&&w<=6)runs.push(m);}
+  const due=runs.filter(x=>x.getTime()+30*60e3<=now.getTime()).sort((a,b)=>b-a)[0];
+  const up=new Date(D.updated.replace(" ","T")+":00");
+  const p2=n=>String(n).padStart(2,"0");
+  let html="";
+  if(due&&up<due)html+=`<div class="card" style="border:1.5px solid var(--amber);color:var(--amber);font-size:13px;line-height:1.6"><b>更新延遲</b>：${p2(due.getMonth()+1)}/${p2(due.getDate())} ${p2(due.getHours())}:${p2(due.getMinutes())} 的自動更新還沒執行（GitHub 排程延遲），目前顯示的是 ${D.updated.slice(5)} 的結果。</div>`;
+  if(msg.length)html+=`<div class="card" style="border:1.5px solid var(--red);background:var(--red-bg);color:var(--red);font-size:13px;line-height:1.6"><b>資料未更新</b>：${msg.join("、")}。分數用的是舊資料，請勿依此判斷。</div>`;
+  return html;
 }
 
 function dayCard(D,i,{compact=false}={}){

@@ -78,6 +78,8 @@ def _run(prev, tw, us, runs=1):
         mod.score_tw = lambda _df: tw
         mod.score_us = lambda _df: us
         mod.load_csv = lambda _name: pd.DataFrame()
+        exp = pd.Timestamp(_today() - pd.tseries.offsets.BDay(1))   # 固定「應有日期」= 合成資料正常時的最後一天
+        mod.expected_dates = lambda now=None: (exp, exp)
         events = []
         for _ in range(runs):
             with contextlib.redirect_stdout(io.StringIO()):
@@ -96,13 +98,13 @@ def test_t02_exit_false_to_true_notifies_once():
 
 def test_t04_tw_stale_without_exit_no_buy():
     ev = _run(_prev(), _tw(exit_last=False, lag=6), _us())[0]
-    assert any(e.startswith("資料停更") for e in ev)
+    assert any(e.startswith("資料未更新") for e in ev)
     assert BUY not in ev
 
 
 def test_t05b_only_us_stale_no_tw_buy():
     ev = _run(_prev(), _tw(exit_last=False), _us(lag=8))[0]
-    assert any(e.startswith("資料停更") for e in ev)
+    assert any(e.startswith("資料未更新") for e in ev)
     assert BUY not in ev
 
 
