@@ -39,6 +39,13 @@ def test_freshness_messages():
     assert S.freshness("2026-10-21", "2026-10-22", now) == ["台股缺 10/22 資料（停在 10/21）"]
 
 
+def test_next_due():
+    assert S.next_due(T("2026-10-23 08:24")) == "202610232243"   # 週五早上 → 當晚 21:43 + 60 分
+    assert S.next_due(T("2026-10-23 21:50")) == "202610240843"   # 週五晚上 → 週六 07:43 + 60 分
+    assert S.next_due(T("2026-10-24 08:00")) == "202610262243"   # 週六早上 → 週一 21:43 + 60 分
+    assert S.next_due(T("2026-10-27 02:10")) == "202610270843"   # 晚上那次延遲到凌晨 → 當天 07:43 + 60 分
+
+
 if __name__ == "__main__":
     for k, f in sorted(globals().items()):
         if k.startswith("test_"):

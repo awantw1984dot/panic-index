@@ -42,6 +42,23 @@ def expected_dates(now=None):
     return tw_exp, us_exp
 
 
+RUN_SLOTS = [((0, 1, 2, 3, 4), (21, 43)), ((1, 2, 3, 4, 5), (7, 43))]   # 排程（台北）：週一～五 21:43、週二～六 07:43
+DUE_GRACE_MIN = 60   # 排程時間過後 60 分鐘仍未更新，捷徑就提醒「更新延遲」
+
+
+def next_due(now=None):
+    """下一次排程更新「最晚應完成」的台北時間（yyyyMMddHHmm），給 iPhone 捷徑比對；
+    若之後的更新沒有執行，status.json 會停在舊值，捷徑看到現在已超過它就會提醒"""
+    tpe = (now if now is not None else pd.Timestamp.now(tz="UTC")).tz_convert("Asia/Taipei").tz_localize(None)
+    for k in range(8):
+        day = tpe.normalize() + pd.Timedelta(days=k)
+        for wdays, (h, m) in sorted(RUN_SLOTS, key=lambda s: s[1]):
+            slot = day + pd.Timedelta(hours=h, minutes=m)
+            if day.weekday() in wdays and slot > tpe:
+                return (slot + pd.Timedelta(minutes=DUE_GRACE_MIN)).strftime("%Y%m%d%H%M")
+    return None
+
+
 def freshness(tw_date, us_date, now=None):
     """最新資料日期是否落後於「應有」的交易日；回傳提醒文字清單（空清單 = 資料都是最新）"""
     tw_exp, us_exp = expected_dates(now)
@@ -323,7 +340,7 @@ def main():
         events.append(f"台股升溫：5日+{t['chg5']:.0f}")
     if u["heat_start"] and prev.get("us_heat_date") != u["date"]:
         events.append(f"美股升溫：5日+{u['chg5']:.0f}")
-    status = {"updated": data["updated"], "tw_date": t["date"], "us_date": u["date"],
+    status = {"updated": data["updated"], "next_due": next_due(), "tw_date": t["date"], "us_date": u["date"],
               "tw_score": round(t["score"]), "tw_zone": t["zone"], "us_score": round(u["score"]), "us_zone": u["zone"],
               "quadrant": t["quadrant"], "tw_exit": t["退潮"], "us_exit": u["退潮"], "stale": stale, "anomalies": ANOMALIES[-5:], "tw_heat": t["heat"], "us_heat": u["heat"],
               "tw_heat_date": t["date"] if t["heat_start"] else prev.get("tw_heat_date"),

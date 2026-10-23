@@ -1,0 +1,355 @@
+{
+  "WFWorkflowActions": [
+    {
+      "WFWorkflowActionIdentifier": "is.workflow.actions.downloadurl",
+      "WFWorkflowActionParameters": {
+        "UUID": "34E939C1-EC7C-43F1-AB7A-C51AF795706D",
+        "WFURL": "https://awantw1984dot.github.io/panic-index/status_test.json"
+      }
+    },
+    {
+      "WFWorkflowActionIdentifier": "is.workflow.actions.getvalueforkey",
+      "WFWorkflowActionParameters": {
+        "UUID": "D3D266E8-F496-421E-925A-98D47BEE04C8",
+        "WFDictionaryKey": "updated",
+        "WFGetDictionaryValueType": "Value",
+        "WFInput": {
+          "Value": {
+            "Type": "ActionOutput",
+            "OutputUUID": "34E939C1-EC7C-43F1-AB7A-C51AF795706D",
+            "OutputName": "URL 的內容"
+          },
+          "WFSerializationType": "WFTextTokenAttachment"
+        }
+      }
+    },
+    {
+      "WFWorkflowActionIdentifier": "is.workflow.actions.getvalueforkey",
+      "WFWorkflowActionParameters": {
+        "UUID": "67EC0E9F-B6E2-4CE5-A570-0C292354CFE7",
+        "WFDictionaryKey": "next_due",
+        "WFGetDictionaryValueType": "Value",
+        "WFInput": {
+          "Value": {
+            "Type": "ActionOutput",
+            "OutputUUID": "34E939C1-EC7C-43F1-AB7A-C51AF795706D",
+            "OutputName": "URL 的內容"
+          },
+          "WFSerializationType": "WFTextTokenAttachment"
+        }
+      }
+    },
+    {
+      "WFWorkflowActionIdentifier": "is.workflow.actions.detect.number",
+      "WFWorkflowActionParameters": {
+        "UUID": "D152C39B-4F6C-4CA7-A733-9C9354C1A328",
+        "WFInput": {
+          "Value": {
+            "Type": "ActionOutput",
+            "OutputUUID": "67EC0E9F-B6E2-4CE5-A570-0C292354CFE7",
+            "OutputName": "字典值"
+          },
+          "WFSerializationType": "WFTextTokenAttachment"
+        }
+      }
+    },
+    {
+      "WFWorkflowActionIdentifier": "is.workflow.actions.format.date",
+      "WFWorkflowActionParameters": {
+        "UUID": "3EC7FA46-16C1-42DB-9F9C-FBB8BA269B0F",
+        "WFDateFormatStyle": "Custom",
+        "WFDateFormat": "yyyyMMddHHmm",
+        "WFDate": {
+          "Value": {
+            "string": "￼",
+            "attachmentsByRange": {
+              "{0, 1}": {
+                "Type": "CurrentDate"
+              }
+            }
+          },
+          "WFSerializationType": "WFTextTokenString"
+        }
+      }
+    },
+    {
+      "WFWorkflowActionIdentifier": "is.workflow.actions.detect.number",
+      "WFWorkflowActionParameters": {
+        "UUID": "EEC5D15A-69F2-4445-A270-EC30A4CD7C75",
+        "WFInput": {
+          "Value": {
+            "Type": "ActionOutput",
+            "OutputUUID": "3EC7FA46-16C1-42DB-9F9C-FBB8BA269B0F",
+            "OutputName": "格式化的日期"
+          },
+          "WFSerializationType": "WFTextTokenAttachment"
+        }
+      }
+    },
+    {
+      "WFWorkflowActionIdentifier": "is.workflow.actions.conditional",
+      "WFWorkflowActionParameters": {
+        "GroupingIdentifier": "8414475B-6D11-499C-B90C-447DD6C44BE7",
+        "WFControlFlowMode": 0,
+        "WFCondition": 2,
+        "WFInput": {
+          "Type": "Variable",
+          "Variable": {
+            "Value": {
+              "Type": "ActionOutput",
+              "OutputUUID": "EEC5D15A-69F2-4445-A270-EC30A4CD7C75",
+              "OutputName": "數字"
+            },
+            "WFSerializationType": "WFTextTokenAttachment"
+          }
+        },
+        "WFNumberValue": {
+          "Value": {
+            "Type": "ActionOutput",
+            "OutputUUID": "D152C39B-4F6C-4CA7-A733-9C9354C1A328",
+            "OutputName": "數字"
+          },
+          "WFSerializationType": "WFTextTokenAttachment"
+        }
+      }
+    },
+    {
+      "WFWorkflowActionIdentifier": "is.workflow.actions.notification",
+      "WFWorkflowActionParameters": {
+        "WFNotificationActionTitle": "特賣會儀表板更新延遲",
+        "WFNotificationActionBody": {
+          "Value": {
+            "string": "最後更新 ￼，自動更新可能延遲或失敗，目前分數不是最新",
+            "attachmentsByRange": {
+              "{5, 1}": {
+                "Type": "ActionOutput",
+                "OutputUUID": "D3D266E8-F496-421E-925A-98D47BEE04C8",
+                "OutputName": "字典值"
+              }
+            }
+          },
+          "WFSerializationType": "WFTextTokenString"
+        },
+        "WFNotificationActionSound": true
+      }
+    },
+    {
+      "WFWorkflowActionIdentifier": "is.workflow.actions.exit",
+      "WFWorkflowActionParameters": {}
+    },
+    {
+      "WFWorkflowActionIdentifier": "is.workflow.actions.conditional",
+      "WFWorkflowActionParameters": {
+        "GroupingIdentifier": "8414475B-6D11-499C-B90C-447DD6C44BE7",
+        "WFControlFlowMode": 2
+      }
+    },
+    {
+      "WFWorkflowActionIdentifier": "is.workflow.actions.documentpicker.open",
+      "WFWorkflowActionParameters": {
+        "UUID": "D726056B-4E16-4135-A551-3E9A3EA6402F",
+        "WFGetFilePath": "特賣會_last.txt",
+        "WFFileErrorIfNotFound": false,
+        "WFShowFilePicker": false
+      }
+    },
+    {
+      "WFWorkflowActionIdentifier": "is.workflow.actions.detect.text",
+      "WFWorkflowActionParameters": {
+        "UUID": "7F6EF9F1-60C9-416C-B3D2-EB259B838DB1",
+        "WFInput": {
+          "Value": {
+            "Type": "ActionOutput",
+            "OutputUUID": "D726056B-4E16-4135-A551-3E9A3EA6402F",
+            "OutputName": "檔案"
+          },
+          "WFSerializationType": "WFTextTokenAttachment"
+        }
+      }
+    },
+    {
+      "WFWorkflowActionIdentifier": "is.workflow.actions.conditional",
+      "WFWorkflowActionParameters": {
+        "GroupingIdentifier": "5ED560C2-D758-48F7-9F07-D998DDF95EB9",
+        "WFControlFlowMode": 0,
+        "WFCondition": 4,
+        "WFInput": {
+          "Type": "Variable",
+          "Variable": {
+            "Value": {
+              "Type": "ActionOutput",
+              "OutputUUID": "7F6EF9F1-60C9-416C-B3D2-EB259B838DB1",
+              "OutputName": "文字"
+            },
+            "WFSerializationType": "WFTextTokenAttachment"
+          }
+        },
+        "WFConditionalActionString": {
+          "Value": {
+            "string": "￼",
+            "attachmentsByRange": {
+              "{0, 1}": {
+                "Type": "ActionOutput",
+                "OutputUUID": "D3D266E8-F496-421E-925A-98D47BEE04C8",
+                "OutputName": "字典值"
+              }
+            }
+          },
+          "WFSerializationType": "WFTextTokenString"
+        }
+      }
+    },
+    {
+      "WFWorkflowActionIdentifier": "is.workflow.actions.exit",
+      "WFWorkflowActionParameters": {}
+    },
+    {
+      "WFWorkflowActionIdentifier": "is.workflow.actions.conditional",
+      "WFWorkflowActionParameters": {
+        "GroupingIdentifier": "5ED560C2-D758-48F7-9F07-D998DDF95EB9",
+        "WFControlFlowMode": 2
+      }
+    },
+    {
+      "WFWorkflowActionIdentifier": "is.workflow.actions.getvalueforkey",
+      "WFWorkflowActionParameters": {
+        "UUID": "CE2EF5F6-AE90-4210-946B-01D583D6E66C",
+        "WFDictionaryKey": "body",
+        "WFGetDictionaryValueType": "Value",
+        "WFInput": {
+          "Value": {
+            "Type": "ActionOutput",
+            "OutputUUID": "34E939C1-EC7C-43F1-AB7A-C51AF795706D",
+            "OutputName": "URL 的內容"
+          },
+          "WFSerializationType": "WFTextTokenAttachment"
+        }
+      }
+    },
+    {
+      "WFWorkflowActionIdentifier": "is.workflow.actions.getvalueforkey",
+      "WFWorkflowActionParameters": {
+        "UUID": "AA8B4CE5-8990-4A6C-9B5B-D3706ACE6805",
+        "WFDictionaryKey": "title",
+        "WFGetDictionaryValueType": "Value",
+        "WFInput": {
+          "Value": {
+            "Type": "ActionOutput",
+            "OutputUUID": "34E939C1-EC7C-43F1-AB7A-C51AF795706D",
+            "OutputName": "URL 的內容"
+          },
+          "WFSerializationType": "WFTextTokenAttachment"
+        }
+      }
+    },
+    {
+      "WFWorkflowActionIdentifier": "is.workflow.actions.conditional",
+      "WFWorkflowActionParameters": {
+        "GroupingIdentifier": "3652139B-BBA4-4E7A-BE97-9F41BA00624C",
+        "WFControlFlowMode": 0,
+        "WFCondition": 100,
+        "WFInput": {
+          "Type": "Variable",
+          "Variable": {
+            "Value": {
+              "Type": "ActionOutput",
+              "OutputUUID": "CE2EF5F6-AE90-4210-946B-01D583D6E66C",
+              "OutputName": "字典值"
+            },
+            "WFSerializationType": "WFTextTokenAttachment"
+          }
+        }
+      }
+    },
+    {
+      "WFWorkflowActionIdentifier": "is.workflow.actions.notification",
+      "WFWorkflowActionParameters": {
+        "WFNotificationActionTitle": {
+          "Value": {
+            "string": "￼",
+            "attachmentsByRange": {
+              "{0, 1}": {
+                "Type": "ActionOutput",
+                "OutputUUID": "AA8B4CE5-8990-4A6C-9B5B-D3706ACE6805",
+                "OutputName": "字典值"
+              }
+            }
+          },
+          "WFSerializationType": "WFTextTokenString"
+        },
+        "WFNotificationActionBody": {
+          "Value": {
+            "string": "￼",
+            "attachmentsByRange": {
+              "{0, 1}": {
+                "Type": "ActionOutput",
+                "OutputUUID": "CE2EF5F6-AE90-4210-946B-01D583D6E66C",
+                "OutputName": "字典值"
+              }
+            }
+          },
+          "WFSerializationType": "WFTextTokenString"
+        },
+        "WFNotificationActionSound": true
+      }
+    },
+    {
+      "WFWorkflowActionIdentifier": "is.workflow.actions.conditional",
+      "WFWorkflowActionParameters": {
+        "GroupingIdentifier": "3652139B-BBA4-4E7A-BE97-9F41BA00624C",
+        "WFControlFlowMode": 2
+      }
+    },
+    {
+      "WFWorkflowActionIdentifier": "is.workflow.actions.gettext",
+      "WFWorkflowActionParameters": {
+        "UUID": "D1B606F9-57EE-4D1A-8C4B-C464E51E1C44",
+        "WFTextActionText": {
+          "Value": {
+            "string": "￼",
+            "attachmentsByRange": {
+              "{0, 1}": {
+                "Type": "ActionOutput",
+                "OutputUUID": "D3D266E8-F496-421E-925A-98D47BEE04C8",
+                "OutputName": "字典值"
+              }
+            }
+          },
+          "WFSerializationType": "WFTextTokenString"
+        }
+      }
+    },
+    {
+      "WFWorkflowActionIdentifier": "is.workflow.actions.documentpicker.save",
+      "WFWorkflowActionParameters": {
+        "UUID": "C802434B-2405-4538-97E6-58E5ABBE14B4",
+        "WFAskWhereToSave": false,
+        "WFFileDestinationPath": "特賣會_last.txt",
+        "WFSaveFileOverwrite": true,
+        "WFInput": {
+          "Value": {
+            "Type": "ActionOutput",
+            "OutputUUID": "D1B606F9-57EE-4D1A-8C4B-C464E51E1C44",
+            "OutputName": "文字"
+          },
+          "WFSerializationType": "WFTextTokenAttachment"
+        }
+      }
+    }
+  ],
+  "WFWorkflowClientVersion": "2607.0.2",
+  "WFWorkflowMinimumClientVersion": 900,
+  "WFWorkflowMinimumClientVersionString": "900",
+  "WFWorkflowIcon": {
+    "WFWorkflowIconStartColor": 4282601983,
+    "WFWorkflowIconGlyphNumber": 59511
+  },
+  "WFWorkflowImportQuestions": [],
+  "WFWorkflowInputContentItemClasses": [
+    "WFStringContentItem"
+  ],
+  "WFWorkflowOutputContentItemClasses": [],
+  "WFWorkflowTypes": [],
+  "WFWorkflowHasShortcutInputVariables": false,
+  "WFQuickActionSurfaces": []
+}

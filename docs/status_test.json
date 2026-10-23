@@ -1,0 +1,26 @@
+{
+ "updated": "（測試用）2026-10-23 08:24",
+ "tw_date": "2026-10-22",
+ "us_date": "2026-10-22",
+ "tw_score": 65,
+ "tw_zone": "開始打折",
+ "us_score": 62,
+ "us_zone": "開始打折",
+ "quadrant": "系統性恐慌",
+ "tw_exit": false,
+ "us_exit": false,
+ "stale": [],
+ "anomalies": [],
+ "tw_heat": false,
+ "us_heat": false,
+ "tw_heat_date": null,
+ "us_heat_date": "2026-10-16",
+ "events": [
+  "美股原價→開始打折",
+  "狀態→系統性恐慌"
+ ],
+ "summary": "台股 65 開始打折｜美股 62 開始打折｜系統性恐慌",
+ "title": "系統性恐慌｜台股 65・美股 62",
+ "body": "美股原價→開始打折，狀態→系統性恐慌",
+ "next_due": "202601010000"
+}
