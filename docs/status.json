@@ -1,11 +1,11 @@
 {
- "updated": "2026-10-29 03:07",
- "next_due": "202610290843",
+ "updated": "2026-10-29 07:43",
+ "next_due": "202610292243",
  "tw_date": "2026-10-28",
- "us_date": "2026-10-27",
+ "us_date": "2026-10-28",
  "tw_score": 56,
  "tw_zone": "原價",
- "us_score": 53,
+ "us_score": 48,
  "us_zone": "原價",
  "quadrant": "正常環境",
  "tw_exit": false,
@@ -17,7 +17,7 @@
  "tw_heat_date": null,
  "us_heat_date": "2026-10-16",
  "events": [],
- "summary": "台股 56 原價｜美股 53 原價｜正常環境",
- "title": "正常環境｜台股 56・美股 53",
+ "summary": "台股 56 原價｜美股 48 原價｜正常環境",
+ "title": "正常環境｜台股 56・美股 48",
  "body": ""
 }
