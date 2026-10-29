@@ -1,13 +1,13 @@
 {
- "updated": "2026-10-29 10:55",
- "next_due": "202610292243",
- "tw_date": "2026-10-28",
+ "updated": "2026-10-29 21:44",
+ "next_due": "202610300843",
+ "tw_date": "2026-10-29",
  "us_date": "2026-10-28",
- "tw_score": 56,
- "tw_zone": "原價",
+ "tw_score": 61,
+ "tw_zone": "開始打折",
  "us_score": 48,
  "us_zone": "原價",
- "quadrant": "正常環境",
+ "quadrant": "本土事件",
  "tw_exit": false,
  "us_exit": false,
  "stale": [],
@@ -16,8 +16,11 @@
  "us_heat": false,
  "tw_heat_date": null,
  "us_heat_date": "2026-10-16",
- "events": [],
- "summary": "台股 56 原價｜美股 48 原價｜正常環境",
- "title": "正常環境｜台股 56・美股 48",
- "body": ""
+ "events": [
+  "台股原價→開始打折",
+  "狀態→本土事件"
+ ],
+ "summary": "台股 61 開始打折｜美股 48 原價｜本土事件",
+ "title": "本土事件｜台股 61・美股 48",
+ "body": "台股原價→開始打折，狀態→本土事件"
 }
