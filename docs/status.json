@@ -1,13 +1,13 @@
 {
- "updated": "2026-10-31 02:52",
- "next_due": "202610310843",
+ "updated": "2026-10-31 07:43",
+ "next_due": "202611022243",
  "tw_date": "2026-10-30",
- "us_date": "2026-10-29",
+ "us_date": "2026-10-30",
  "tw_score": 74,
  "tw_zone": "開始打折",
- "us_score": 51,
- "us_zone": "原價",
- "quadrant": "本土事件",
+ "us_score": 62,
+ "us_zone": "開始打折",
+ "quadrant": "系統性恐慌",
  "tw_exit": false,
  "us_exit": false,
  "stale": [],
@@ -16,8 +16,11 @@
  "us_heat": false,
  "tw_heat_date": null,
  "us_heat_date": "2026-10-16",
- "events": [],
- "summary": "台股 74 開始打折｜美股 51 原價｜本土事件",
- "title": "本土事件｜台股 74・美股 51",
- "body": ""
+ "events": [
+  "美股原價→開始打折",
+  "狀態→系統性恐慌"
+ ],
+ "summary": "台股 74 開始打折｜美股 62 開始打折｜系統性恐慌",
+ "title": "系統性恐慌｜台股 74・美股 62",
+ "body": "美股原價→開始打折，狀態→系統性恐慌"
 }
