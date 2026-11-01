@@ -58,6 +58,10 @@ input[type=range]{width:100%;margin:8px 0 2px;accent-color:var(--tw)}
 .legend{font-size:11px;display:flex;gap:12px;margin-top:4px;color:var(--text2)}
 .note{font-size:12px;color:var(--text2);line-height:1.6;margin-top:8px}
 .err{color:var(--red);font-size:14px;padding:20px 4px}
+.lamps{display:grid;grid-template-columns:18px 40px minmax(0,1fr);gap:8px 6px;align-items:start;font-size:13px;margin-top:10px;line-height:1.45}
+.dot{width:12px;height:12px;border-radius:50%;margin-top:3px;border:1.5px solid var(--text3)}
+.dot.on{background:var(--blue);border-color:var(--blue)}.dot.na{border-style:dashed;opacity:.5}
+.lv-常態{background:var(--gray-bg);color:var(--text2)} .lv-警覺{background:var(--amber-bg);color:var(--amber)} .lv-冰水區{background:var(--blue-bg);color:var(--blue)}
 details.help{margin-top:12px;border-top:.5px solid var(--line);padding-top:10px}
 details.help>summary{list-style:none;cursor:pointer;font-size:13px;color:var(--blue);display:flex;justify-content:space-between}
 details.help>summary::-webkit-details-marker{display:none}
@@ -237,6 +241,43 @@ function staleBanner(D){
   return html;
 }
 
+
+const fs=(v,u="%")=>v==null?"—":(v>0?"+":"")+fx(v)+u;
+function lampText(k,d){
+  switch(k){
+    case "定位":return `三條均線下彎 ${d.ma_down??"—"}/3・距 10 月線 ${fs(d.vs_ma200)}`;
+    case "位置":return `權值 100 大跌破 10 月線 ${d.top_below??"—"}%・距 5 年線 ${fs(d.vs_5y)}<div class="tiny">參考：櫃買距年線 ${fs(d.tpex_vs_ma240)}${d.tpex_vs_ma240!=null&&d.vs_ma200!=null&&d.tpex_vs_ma240<0&&d.vs_ma200>0?"（櫃買先轉弱）":""}</div>`;
+    case "壓力":return `融資維持率 ${fx(d.maint)}%`;
+    case "情緒":return `近 22 日無上漲類股 ${d.noup??"—"} 天・VIX ${fx(d.vix)}・跌停 ${d.limit_down??"—"} 家`;
+    case "外部":return `費半／S&P／Nasdaq 跌破 10 月線 ${d.ext_below??"—"}/${d.ext_n??3}${d.fund?'・<b style="color:var(--blue)">國安基金進場中</b>':""}`;
+  }
+}
+const LAMP_RULE={"定位":"10 日、10 週、10 月線全部下彎，且加權跌破 10 月線","位置":"權值 100 大有 60% 以上跌破 10 月線（課程說 3～4 成，但近兩年 35% 幾乎是常態，回測後提高），或加權在 5 年線 +5% 以內",
+  "壓力":"融資維持率 ≤ 144%（本專案口徑，約等於課程的 140%）","情緒":"近 22 個交易日無上漲類股 ≥ 3 天，或 VIX ≥ 40，或上市跌停 ≥ 200 家",
+  "外部":"費半、S&P500、Nasdaq 全部跌破 10 月線，或國安基金宣布進場後 60 個交易日內"};
+function lampHint(L){
+  if(L.level==="冰水區"){
+    if(L.type&&L.type.startsWith("急殺"))return "左側冰水區・急殺型：訊號集中，考驗信心。大盤 ETF 可以加快分批";
+    if(L.type&&L.type.startsWith("緩跌"))return "左側冰水區・緩跌型：VIX 不會給極點，考驗耐心。拉長分批節奏，不要一次投入";
+    return "左側冰水區：大盤 ETF 開始分批布局";
+  }
+  if(L.level==="警覺")return (L.type?L.type+"：":"")+"提高警覺，先準備資金與購物清單";
+  return "常態區：照平常紀律";
+}
+function lightsCard(t){
+  const L=t.lights; if(!L)return "";
+  const rows=["定位","位置","壓力","情緒","外部"].map(k=>{const v=L.lamps[k];
+    return `<span class="dot ${v?"on":v==null?"na":""}" title="${v==null?"無資料":v?"亮":"未亮"}"></span><b style="font-weight:${v?600:400};color:${v?"var(--blue)":"var(--text)"}">${k}</b><span>${v==null?'<span class="muted" style="font-size:13px">資料不足</span>':lampText(k,L.d)}</span>`}).join("");
+  const help=`<details class="help"><summary><span>燈號怎麼看</span><span class="chev">▶</span></summary><dl>
+    <dt>冰水燈是什麼</dt><dd>來自「非常態投資學」課程 3-1 的市場氛圍儀表板，專門判斷左側非常態（冰水區）。和上方分數並列：分數看溫度，燈號看訊號亮了幾格。亮 1～2 格提高警覺，亮 3 格以上才是冰水區的強烈訊號。</dd>
+    ${Object.entries(LAMP_RULE).map(([k,v])=>`<dt>${k}</dt><dd>${v}</dd>`).join("")}
+    <dt>急殺型 vs 緩跌型</dt><dd>急殺型（黑天鵝）：VIX ≥ 40、分數 10 日內急升 30 或跌停爆量，底部清楚，考驗信心。緩跌型（灰犀牛）：均線全部下彎但 VIX 一直在 35 以下，沒有明確恐慌極點，考驗耐心。</dd></dl></details>`;
+  return `<div class="card"><div class="row"><span class="h">冰水燈・亮 ${L.n} / 5</span><span class="pill lv-${L.level}">${L.level}</span></div>
+    ${L.type?`<div style="font-size:13px;margin-top:4px;color:var(--blue);font-weight:600">${L.type}</div>`:""}
+    <div class="lamps">${rows}</div>
+    <div class="sep" style="font-size:14px;line-height:1.7">${esc(lampHint(L))}</div>${help}</div>`;
+}
+
 function dayCard(D,i,{compact=false}={}){
   const tw=D.tw,t=tw[i];
   const usRow=D.us.filter(u=>u.date<=t.date).slice(-1)[0];
@@ -260,6 +301,7 @@ function dayCard(D,i,{compact=false}={}){
       <span class="v">美股<br>平靜</span>${cell("正常環境")}${cell("本土事件")}
       <span class="v">美股<br>恐慌</span>${cell("預警")}${cell("系統性恐慌")}</div></div>
   <div class="card action"><div class="h" style="margin-bottom:4px">對應行動</div><div style="font-size:14px;line-height:1.7">${esc(action(t,i,tw))}</div></div>
+  ${lightsCard(t)}
   ${compact?"":eventsCard(D)}`;
   if(compact)return html+`<div class="card"><div class="h">台股退潮訊號：${twc.title}</div><div class="checks">${twc.html}</div></div>`;
   html+=`

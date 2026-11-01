@@ -13,6 +13,7 @@ import numpy as np
 import pandas as pd
 
 from common import DATA, ROOT, load_csv
+import lights
 
 TW_READY = (21, 0)    # 台股融資資料約台北 21:00 公布
 US_READY_MIN = 30     # 美股收盤後 30 分鐘才視為已有收盤資料
@@ -99,14 +100,16 @@ TW_GROUPS = {
 # 絕對水位：依各指標長期歷史常態設定的參考點（數值 → 0~100 分）
 # 只看近 2 年百分位，平靜期稍有波動就會被誇大，所以與絕對水位各占一半
 ANCHORS = {
-    "VIX": [(12, 0), (16, 30), (20, 55), (25, 75), (30, 85), (40, 95), (50, 100)],
+    # 課程 3-1：VIX 30 只是提高注意、40 投入第一批、50 分批核心、60 歷史級（2026/11 由 30→85 下修）
+    "VIX": [(12, 0), (16, 25), (20, 45), (25, 60), (30, 72), (40, 88), (50, 96), (60, 100)],
     "VIX期限結構": [(0.80, 0), (0.88, 40), (0.95, 65), (1.00, 80), (1.10, 95), (1.20, 100)],
     "MOVE": [(60, 0), (80, 25), (100, 50), (120, 75), (150, 92), (180, 100)],
     "HY利差": [(2.5, 0), (3.5, 20), (4.5, 50), (5.5, 70), (7, 85), (9, 95), (12, 100)],
     "IG利差": [(0.7, 0), (1.0, 20), (1.3, 50), (1.6, 70), (2.0, 85), (3.0, 97), (4.0, 100)],
     "JNK/IEF回撤": [(0, 0), (0.02, 30), (0.05, 60), (0.08, 80), (0.12, 95), (0.20, 100)],
     "臺指VIX": [(12, 0), (16, 25), (20, 50), (25, 70), (30, 82), (40, 95), (50, 100)],
-    "融資維持率": [(130, 100), (135, 97), (145, 85), (155, 70), (165, 50), (175, 30), (190, 0)],
+    # 課程 2-3／3-1：166% 正常、150% 準備、140% 布局、130% 強力；本專案口徑比課程高約 4，換算後如下
+    "融資維持率": [(134, 100), (144, 85), (154, 70), (170, 40), (190, 0)],
     "融資10日變化": [(-12, 100), (-8, 90), (-5, 75), (-2, 55), (0, 40), (3, 20), (6, 0)],
     "外資期貨10日變化": [(-30000, 100), (-15000, 80), (-5000, 60), (0, 45), (10000, 20), (25000, 0)],
     "跌破季線比例": [(20, 0), (40, 30), (55, 55), (70, 80), (85, 95), (95, 100)],
@@ -119,6 +122,7 @@ VALID = {
     "JNK": (20, 300), "IEF": (20, 300), "STLFSI": (-5, 15), "SPX": (500, 50000),
     "TAIEX": (5000, 200000), "margin_maint": (100, 400), "margin_amt_k": (1e7, 5e9),
     "tvix": (5, 150), "below_ma60_pct": (0, 100), "fut_foreign_net_oi": (-500000, 500000),
+    "limit_down": (0, 2000), "limit_up": (0, 2000), "sector_up": (0, 60), "NASDAQ": (1000, 200000), "TPEX": (20, 2000),
 }
 ANOMALIES = []
 
@@ -258,7 +262,14 @@ def main():
     ice = load_csv("fred_ice.csv")   # ICE 利差只存在執行環境中，不公開
     us_in = us_in.join(ice, how="outer") if not ice.empty else us_in.reindex(columns=[*us_in.columns, "HY_OAS", "IG_OAS"])
     us_out, us_raw = score_us(us_in)
-    tw_out, tw_raw = score_tw(load_csv("tw_daily.csv"))
+    tw_in = load_csv("tw_daily.csv")
+    tw_out, tw_raw = score_tw(tw_in)
+    try:
+        L = lights.compute(sanitize(tw_in[tw_in["TAIEX"].notna()], "冰水燈"), sanitize(us_in, "冰水燈美股"), tw_out["score"])
+        L.to_csv(os.path.join(DATA, "lights_tw.csv"), float_format="%.4g")
+    except Exception as e:   # 燈號失敗不影響分數
+        print(f"冰水燈計算失敗：{type(e).__name__}: {e}")
+        L = None
     us_out.to_csv(os.path.join(DATA, "scores_us.csv"), float_format="%.4g")
     tw_out.to_csv(os.path.join(DATA, "scores_tw.csv"), float_format="%.4g")
 
@@ -291,7 +302,8 @@ def main():
 
     tw_rows = rows(tw_out, tw_raw, lambda d: {
         "us_score": None if pd.isna(us_on_tw[d]) else round(float(us_on_tw[d]), 1),
-        "quadrant": quadrant(tw_out.at[d, "score"], us_on_tw[d])})
+        "quadrant": quadrant(tw_out.at[d, "score"], us_on_tw[d]),
+        "lights": lights.row_json(L, d) if L is not None and d in L.index else None})
     us_rows = rows(us_out, us_raw)
     site = os.path.join(ROOT, "docs"); os.makedirs(site, exist_ok=True)
     cal = []   # 經濟數據公布日（fetch_us.py 產生）＋手動維護的事件（台積電法說會等）
@@ -333,6 +345,9 @@ def main():
         events.append(f"美股{prev.get('us_zone')}→{u['zone']}")
     if t["quadrant"] != prev.get("quadrant"):
         events.append(f"狀態→{t['quadrant']}")
+    lt = t.get("lights") or {}
+    if lt.get("level") and prev.get("tw_lights") and lt["level"] != prev.get("tw_lights"):
+        events.append(f"冰水燈{prev.get('tw_lights')}→{lt['level']}（亮 {lt['n']} 格）")
     if u["退潮"] and not prev.get("us_exit"):
         events.append("美股退潮訊號觸發")
     # 升溫：10 個交易日內只提醒一次；用日期判斷，避免早晚兩次更新重複通知
@@ -342,7 +357,8 @@ def main():
         events.append(f"美股升溫：5日+{u['chg5']:.0f}")
     status = {"updated": data["updated"], "next_due": next_due(), "tw_date": t["date"], "us_date": u["date"],
               "tw_score": round(t["score"]), "tw_zone": t["zone"], "us_score": round(u["score"]), "us_zone": u["zone"],
-              "quadrant": t["quadrant"], "tw_exit": t["退潮"], "us_exit": u["退潮"], "stale": stale, "anomalies": ANOMALIES[-5:], "tw_heat": t["heat"], "us_heat": u["heat"],
+              "quadrant": t["quadrant"], "tw_exit": t["退潮"],
+              "tw_lights": (t.get("lights") or {}).get("level") or prev.get("tw_lights"), "tw_lights_n": (t.get("lights") or {}).get("n"), "us_exit": u["退潮"], "stale": stale, "anomalies": ANOMALIES[-5:], "tw_heat": t["heat"], "us_heat": u["heat"],
               "tw_heat_date": t["date"] if t["heat_start"] else prev.get("tw_heat_date"),
               "us_heat_date": u["date"] if u["heat_start"] else prev.get("us_heat_date"), "events": events,
               "summary": f"台股 {t['score']:.0f} {t['zone']}｜美股 {u['score']:.0f} {u['zone']}｜{t['quadrant']}",

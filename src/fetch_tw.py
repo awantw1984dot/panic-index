@@ -5,6 +5,7 @@
 - 證交所 MI_MARGN：融資餘額（張、金額）與個股融資 → 計算大盤融資維持率
 - 證交所 MI_INDEX：個股收盤價（算維持率、跌破季線比例）、漲跌家數
 - 期交所：外資台指期淨未平倉、臺指 VIX
+- 冰水燈（課程 3-1）：MI_INDEX 的漲跌停家數、上漲類股數；FMTQIK 加權長歷史（5 年線）；OpenAPI 已發行股數（權值 100 大）
 """
 import datetime as dt
 import io
@@ -19,6 +20,10 @@ from common import DATA, START, get, load_csv, num, roc_to_date, save_merge
 MAX_MINUTES = float(os.environ.get("MAX_MINUTES", "300"))   # 預留時間把資料存回專案
 T0 = time.time()
 CLOSES = os.path.join(DATA, "tw_closes.csv.gz")
+LONG_START = dt.date(2018, 1, 1)   # 加權指數長歷史：5 年線需要 2023 往前再 5 年
+# 類股指數中屬於「合計」或槓桿反向的項目，不算進上漲類股數
+SECTOR_SKIP = {"水泥窯製類指數", "塑膠化工類指數", "機電類指數", "化學生技醫療類指數", "電子工業類指數",
+               "電子類兩倍槓桿指數", "電子類反向指數"}
 
 
 def months(start, end):
@@ -40,16 +45,17 @@ def fetch_taiex(start, end):
 
 
 # ---------- 單日：融資與收盤價 ----------
-def fetch_day(d):
-    ymd = d.strftime("%Y%m%d")
-    mj = get(f"https://www.twse.com.tw/rwd/zh/marginTrading/MI_MARGN?date={ymd}&selectType=ALL&response=json").json()
+def get_mi(ymd):
     ij = get(f"https://www.twse.com.tw/rwd/zh/afterTrading/MI_INDEX?date={ymd}&type=ALLBUT0999&response=json").json()
-    if mj.get("stat") != "OK" or ij.get("stat") != "OK":
-        raise RuntimeError(f"{ymd} 證交所回應異常：{mj.get('stat')} / {ij.get('stat')}")
+    if ij.get("stat") != "OK":
+        raise RuntimeError(f"{ymd} MI_INDEX 回應異常：{ij.get('stat')}")
+    return ij
 
-    # 收盤價（全部證券，維持率要用）
-    closes = {}
-    adv = dec = None
+
+def parse_mi(ij):
+    """收盤價、漲跌家數（含漲跌停）、類股漲跌（無上漲類股用）"""
+    closes, rec = {}, {}
+    up_sec = n_sec = 0
     for t in ij["tables"]:
         title = t.get("title") or ""
         if "每日收盤行情" in title:
@@ -59,10 +65,32 @@ def fetch_day(d):
                 if p:
                     closes[row[ic].strip()] = p
         elif "漲跌證券數合計" in title:
+            for row in t["data"]:   # row[2] 是「股票」欄，格式 '1,032(937)'：括號內為漲停／跌停
+                m = re.match(r"([\d,]+)\(([\d,]+)\)", row[2].strip())
+                total = num(re.sub(r"\(.*\)", "", row[2]))
+                if row[0].startswith("上漲"):
+                    rec["adv"], rec["limit_up"] = total, num(m.group(2)) if m else None
+                if row[0].startswith("下跌"):
+                    rec["dec"], rec["limit_down"] = total, num(m.group(2)) if m else None
+        elif "價格指數(臺灣證券交易所)" in title:
             for row in t["data"]:
-                v = num(re.sub(r"\(.*\)", "", row[2]))
-                if row[0].startswith("上漲"): adv = v
-                if row[0].startswith("下跌"): dec = v
+                name = row[0].strip()
+                if name.endswith("類指數") and name not in SECTOR_SKIP:
+                    pct = num(row[4])
+                    if pct is not None:
+                        n_sec += 1
+                        up_sec += pct > 0
+    if n_sec:
+        rec["sector_up"], rec["sector_n"] = up_sec, n_sec
+    return closes, rec
+
+
+def fetch_day(d):
+    ymd = d.strftime("%Y%m%d")
+    mj = get(f"https://www.twse.com.tw/rwd/zh/marginTrading/MI_MARGN?date={ymd}&selectType=ALL&response=json").json()
+    if mj.get("stat") != "OK":
+        raise RuntimeError(f"{ymd} 融資回應異常：{mj.get('stat')}")
+    closes, rec = parse_mi(get_mi(ymd))
 
     # 融資
     summ, detail = mj["tables"][0], mj["tables"][1]
@@ -77,9 +105,60 @@ def fetch_day(d):
             mv += bal * 1000 * p
     maint = mv / (amt * 1000) * 100 if amt else None
 
-    rec = {"margin_lots": lots, "margin_amt_k": amt, "margin_maint": maint, "adv": adv, "dec": dec}
+    rec.update({"margin_lots": lots, "margin_amt_k": amt, "margin_maint": maint})
     stock_closes = {k: v for k, v in closes.items() if re.fullmatch(r"\d{4}", k)}   # 普通股，算寬度用
     return rec, stock_closes
+
+
+# ---------- 冰水燈用：回補、長歷史、股本 ----------
+def backfill_mi(old, budget_min):
+    """舊資料沒有漲跌停、類股欄位的日子，只重抓 MI_INDEX 補上（新到舊，時間到就停，下次接著補）"""
+    if old.empty:
+        return
+    need = old.index[old["margin_maint"].notna() & (old["sector_up"].isna() if "sector_up" in old else True)]
+    if not len(need):
+        return
+    print(f"冰水燈欄位回補：還有 {len(need)} 天")
+    t1, recs = time.time(), {}
+    for d in sorted(need, reverse=True):
+        if (time.time() - t1) / 60 > budget_min or (time.time() - T0) / 60 > MAX_MINUTES:
+            break
+        try:
+            _, rec = parse_mi(get_mi(d.strftime("%Y%m%d")))
+            recs[d] = rec
+        except Exception as e:
+            print(f"  {d.date()} 回補失敗：{e}")
+        if len(recs) >= 25:
+            save_merge("tw_daily.csv", pd.DataFrame.from_dict(recs, orient="index")); recs.clear()
+    if recs:
+        save_merge("tw_daily.csv", pd.DataFrame.from_dict(recs, orient="index"))
+
+
+def update_taiex_long():
+    """data/taiex_long.csv：2018 起的加權指數（5 年線、10 月線用）；第一次回補，之後只補最近 2 個月"""
+    old = load_csv("taiex_long.csv")
+    today = dt.date.today()
+    start = LONG_START if old.empty or old.index.min() > pd.Timestamp(LONG_START) + pd.Timedelta(days=10) \
+        else (old.index.max() - pd.Timedelta(days=40)).date()
+    try:
+        s = fetch_taiex(start, today)
+        save_merge("taiex_long.csv", s.to_frame())
+        print(f"加權長歷史：{start} 起補 {len(s)} 天")
+    except Exception as e:
+        print(f"  加權長歷史失敗：{e}")
+
+
+def update_shares():
+    """data/tw_shares.csv：上市公司已發行普通股數（算市值排名，找權值 100 大）"""
+    try:
+        j = get("https://openapi.twse.com.tw/v1/opendata/t187ap03_L", wait=1).json()
+        rows = {r["公司代號"].strip(): num(r.get("已發行普通股數或TDR原股發行股數")) for r in j}
+        df = pd.Series({k: v for k, v in rows.items() if v}, name="shares").to_frame()
+        df.index.name = "code"
+        df.to_csv(os.path.join(DATA, "tw_shares.csv"))
+        print(f"已發行股數：{len(df)} 家")
+    except Exception as e:
+        print(f"  已發行股數失敗：{e}（沿用舊檔）")
 
 
 # ---------- 期交所 ----------
@@ -184,6 +263,12 @@ def main():
     if not closes.empty:
         df["below_ma60_pct"] = breadth(closes)
         df = save_merge("tw_daily.csv", df)
+
+    # 5. 冰水燈用資料
+    update_taiex_long()
+    update_shares()
+    backfill_mi(load_csv("tw_daily.csv"), float(os.environ.get("BACKFILL_MINUTES", "60")))
+    df = load_csv("tw_daily.csv")
 
     print(f"\n台股資料：{len(df)} 列，{df.index.min().date()} ～ {df.index.max().date()}")
     print("缺值數：", df.isna().sum().to_dict())

@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-"""美股資料：yfinance（VIX、VIX3M、MOVE、JNK、IEF、S&P500、費半）＋ FRED（HY/IG 利差、STLFSI）"""
+"""美股資料：yfinance（VIX、VIX3M、MOVE、JNK、IEF、S&P500、費半、Nasdaq；另帶櫃買指數給冰水燈用）＋ FRED（HY/IG 利差、STLFSI）"""
 import json
 import os
 import sys
@@ -12,7 +12,7 @@ import yfinance as yf
 from common import DATA, START, get, save_merge
 
 YF = {"^VIX": "VIX", "^VIX3M": "VIX3M", "^MOVE": "MOVE", "JNK": "JNK", "IEF": "IEF",
-      "^GSPC": "SPX", "^SOX": "SOX"}
+      "^GSPC": "SPX", "^SOX": "SOX", "^IXIC": "NASDAQ", "^TWOII": "TPEX"}
 FRED = {"BAMLH0A0HYM2": "HY_OAS", "BAMLC0A0CM": "IG_OAS", "STLFSI4": "STLFSI"}
 ICE = ["HY_OAS", "IG_OAS"]   # ICE BofA 授權：不得公開發布原始數值
 
