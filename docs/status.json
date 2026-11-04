@@ -1,11 +1,11 @@
 {
- "updated": "2026-11-04 21:44",
+ "updated": "2026-11-05 04:33",
  "next_due": "202611050843",
  "tw_date": "2026-11-04",
  "us_date": "2026-11-03",
  "tw_score": 80,
  "tw_zone": "特賣會",
- "us_score": 66,
+ "us_score": 65,
  "us_zone": "開始打折",
  "quadrant": "系統性恐慌",
  "tw_exit": false,
@@ -20,10 +20,8 @@
  "us_heat": false,
  "tw_heat_date": null,
  "us_heat_date": "2026-10-16",
- "events": [
-  "台股開始打折→特賣會"
- ],
- "summary": "台股 80 特賣會｜美股 66 開始打折｜系統性恐慌",
- "title": "系統性恐慌｜台股 80・美股 66",
- "body": "台股開始打折→特賣會"
+ "events": [],
+ "summary": "台股 80 特賣會｜美股 65 開始打折｜系統性恐慌",
+ "title": "系統性恐慌｜台股 80・美股 65",
+ "body": ""
 }
