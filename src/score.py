@@ -348,6 +348,12 @@ def main():
     lt = t.get("lights") or {}
     if lt.get("level") and prev.get("tw_lights") and lt["level"] != prev.get("tw_lights"):
         events.append(f"冰水燈{prev.get('tw_lights')}→{lt['level']}（亮 {lt['n']} 格）")
+    tri = lt.get("tri") or {}
+    # 三角分批：本輪最高批次升級才通知（同一輪只通知一次，避免燈號閃爍重複提醒）
+    if tri.get("ep_max") and (tri.get("ep_start") != prev.get("tw_tri_start") or tri["ep_max"] > (prev.get("tw_tri_max") or 0)):
+        lo = 1 if tri.get("ep_start") != prev.get("tw_tri_start") else (prev.get("tw_tri_max") or 0) + 1
+        names = "、".join(f"{b['name']}（{b['pct']}%）" for b in tri["batches"][lo - 1:tri["ep_max"]])
+        events.append(f"台股冰水區：可人工檢視 ETF {names}")
     if u["退潮"] and not prev.get("us_exit"):
         events.append("美股退潮訊號觸發")
     # 升溫：10 個交易日內只提醒一次；用日期判斷，避免早晚兩次更新重複通知
@@ -358,7 +364,9 @@ def main():
     status = {"updated": data["updated"], "next_due": next_due(), "tw_date": t["date"], "us_date": u["date"],
               "tw_score": round(t["score"]), "tw_zone": t["zone"], "us_score": round(u["score"]), "us_zone": u["zone"],
               "quadrant": t["quadrant"], "tw_exit": t["退潮"],
-              "tw_lights": (t.get("lights") or {}).get("level") or prev.get("tw_lights"), "tw_lights_n": (t.get("lights") or {}).get("n"), "us_exit": u["退潮"], "stale": stale, "anomalies": ANOMALIES[-5:], "tw_heat": t["heat"], "us_heat": u["heat"],
+              "tw_lights": (t.get("lights") or {}).get("level") or prev.get("tw_lights"), "tw_lights_n": (t.get("lights") or {}).get("n"),
+              "tw_tri_start": tri.get("ep_start") or prev.get("tw_tri_start"),
+              "tw_tri_max": tri.get("ep_max") if tri.get("ep_start") else prev.get("tw_tri_max"), "us_exit": u["退潮"], "stale": stale, "anomalies": ANOMALIES[-5:], "tw_heat": t["heat"], "us_heat": u["heat"],
               "tw_heat_date": t["date"] if t["heat_start"] else prev.get("tw_heat_date"),
               "us_heat_date": u["date"] if u["heat_start"] else prev.get("us_heat_date"), "events": events,
               "summary": f"台股 {t['score']:.0f} {t['zone']}｜美股 {u['score']:.0f} {u['zone']}｜{t['quadrant']}",

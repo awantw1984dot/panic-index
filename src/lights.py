@@ -33,7 +33,14 @@ CFG = {
     "fund_days": 60,                                    # 國安基金宣布後 60 個交易日內維持亮燈
     # 型態 — 課程 3-1：黑天鵝（急殺，考驗信心）vs 灰犀牛（緩跌，VIX 多在 35 以下，考驗耐心）
     "swan_vix": 40, "swan_jump": 30, "swan_limit_down": 300, "rhino_vix": 35,
+    # 三角分批（大盤 ETF 20／30／50）— 課程 3-3 範例條件；作者未給機械公式，只做「人工檢視」提示
+    # 以下為使用者定規（2026/11，非作者原文）：同一批範例條件達 tri_need 項就提示；短期跌幅＝距一年高點
+    "ma_2y": 500, "dd_window": 250, "tri_need": 2, "tri_pending_days": 20,
+    "b1_vix": 40, "b1_dd": 30,                         # 第一批：VIX 升破 40、亮 1～2 格、跌破兩年線／跌幅 >30%
+    "b2_vix": 45, "b2_maint": 144, "b2_dd": 40,        # 第二批：VIX >45、融資 <140%（本專案 144）、觀察類股持續缺席、五年線／跌幅 40%
+    "b3_vix": 50, "b3_maint": 139, "b3_lamps": 4,      # 第三批：五格幾乎全亮、融資 <約 135%（本專案 139）、VIX >50、國安基金、三循環集中
 }
+TRI = [("第一批", 20), ("第二批", 30), ("第三批", 50)]
 NAMES = ["定位", "位置", "壓力", "情緒", "外部"]
 
 
@@ -163,6 +170,40 @@ def compute(tw, us, tw_score, c=CFG):
     rhino = (out["定位"] == True) & (vmax < c["rhino_vix"])
     active = out["亮燈數"] >= 1   # 型態只描述左側非常態，沒亮燈就不判斷
     out["型態"] = np.where(active & swan, "急殺型（黑天鵝）", np.where(active & rhino, "緩跌型（灰犀牛）", None))
+
+    # 三角分批（課程 3-3）：每批列出範例條件是否成立，達 tri_need 項提示「可人工檢視」
+    ma2y = taiex.rolling(c["ma_2y"], min_periods=c["ma_2y"]).mean()
+    hi = taiex.rolling(c["dd_window"], min_periods=int(c["dd_window"] * 0.8)).max()
+    dd = ((1 - taiex / hi) * 100).reindex(idx)
+    b2y = (taiex < ma2y).where(ma2y.notna()).reindex(idx)
+    b5y = (taiex < ma5y).where(ma5y.notna()).reindex(idx)
+    vt = vix_tw
+    conds = {
+        1: {"VIX≥40": (vt >= c["b1_vix"]).where(vt.notna()), "冰水燈亮≥1格": out["亮燈數"] >= 1,
+            "跌破2年線": b2y, "距一年高點跌≥30%": (dd >= c["b1_dd"]).where(dd.notna())},
+        2: {"VIX≥45": (vt >= c["b2_vix"]).where(vt.notna()), "融資維持率≤144%": (m <= c["b2_maint"]).where(m.notna()),
+            "無上漲類股持續": (noup >= c["noup_days"]).where(noup.notna()),
+            "跌破5年線或跌幅≥40%": _any(b5y, (dd >= c["b2_dd"]).where(dd.notna()))},
+        3: {"亮燈≥4格": out["亮燈數"] >= c["b3_lamps"], "融資維持率≤139%": (m <= c["b3_maint"]).where(m.notna()),
+            "VIX≥50": (vt >= c["b3_vix"]).where(vt.notna()), "國安基金進場": fund, "三循環集中": out["定位"]},
+    }
+    reach = pd.Series(0, index=idx)
+    for k, cd in conds.items():
+        df = pd.concat(cd, axis=1)
+        for name in cd:
+            out[f"t{k}_{name}"] = df[name]
+        hit = (df == True).sum(axis=1)
+        out[f"t{k}_n"] = hit
+        reach = reach.where(~((hit >= c["tri_need"]) & active), k)
+    out["t_reach"] = reach.where(active, 0)
+    # 本輪：亮燈 ≥1 的連續期間；記錄本輪最高到第幾批，回到常態後保留「待決」提示 tri_pending_days 天
+    ep = (active & ~active.shift(1, fill_value=False)).cumsum().where(active)
+    out["t_ep_start"] = pd.Series(idx, index=idx).where(active).groupby(ep).transform("min")
+    out["t_ep_max"] = out["t_reach"].where(active).groupby(ep).cummax()
+    last_max = out["t_ep_max"].ffill()
+    since = (~active).astype(int).groupby(active.cumsum()).cumsum()
+    out["t_pending"] = (~active & last_max.between(1, 2) & (since <= c["tri_pending_days"])).astype(bool)
+    out["t_pending_max"] = last_max.where(out["t_pending"])
     return out
 
 
@@ -193,4 +234,23 @@ def row_json(L, d):
                   "top_below": _f(r["d_top_below"], 0), "tpex_vs_ma240": _f(r["d_tpex_vs_ma240"]),
                   "maint": _f(r["d_maint"]), "noup": _f(r["d_noup"], 0), "vix": _f(r["d_vix"]),
                   "limit_down": _f(r["d_limit_down"], 0), "ext_below": _f(r["d_ext_below"], 0),
-                  "ext_n": _f(r["d_ext_n"], 0), "fund": bool(r["d_fund"])}}
+                  "ext_n": _f(r["d_ext_n"], 0), "fund": bool(r["d_fund"])},
+            "tri": tri_json(L, d)}
+
+
+def tri_json(L, d):
+    """三角分批：每批條件（True／False／None＝無資料）、今天可檢視到第幾批、本輪最高、回到常態後的待決狀態"""
+    r = L.loc[d]
+    if "t_reach" not in L:
+        return None
+    batches = []
+    for k, (name, pct) in enumerate(TRI, 1):
+        cs = {c[len(f"t{k}_"):]: (None if pd.isna(r[c]) else bool(r[c]))
+              for c in L.columns if c.startswith(f"t{k}_") and c != f"t{k}_n"}
+        batches.append({"name": name, "pct": pct, "n": int(r[f"t{k}_n"]), "of": len(cs), "conds": cs})
+    st = r["t_ep_start"]
+    return {"batches": batches, "reach": int(r["t_reach"]),
+            "ep_max": None if pd.isna(r["t_ep_max"]) else int(r["t_ep_max"]),
+            "ep_start": None if pd.isna(st) else pd.Timestamp(st).strftime("%Y-%m-%d"),
+            "pending": bool(r["t_pending"]), "pending_max": None if pd.isna(r["t_pending_max"]) else int(r["t_pending_max"]),
+            "need": CFG["tri_need"]}

@@ -264,6 +264,23 @@ function lampHint(L){
   if(L.level==="警覺")return (L.type?L.type+"：":"")+"提高警覺，先準備資金與購物清單";
   return "常態區：照平常紀律";
 }
+function triBlock(L){
+  const T=L.tri; if(!T)return "";
+  const zh=["","第一批","第二批","第三批"];
+  if(L.n<1){
+    if(!T.pending)return "";
+    return `<div class="sep" style="font-size:13px;line-height:1.6;color:var(--amber)">大盤 ETF 三角分批：上一輪最高到${zh[T.pending_max]}，後續批次未觸發，剩餘資金待決（作者未定義處理方式，不追價）</div>`;
+  }
+  const mk=v=>v==null?'<span class="muted">—</span>':v?'<b style="color:var(--blue)">✓</b>':'<span class="muted">✗</span>';
+  const rows=T.batches.map((b,i)=>{const lit=b.n>=T.need,sym=lit?"●":b.n>0?"◐":"○";
+    return `<div style="margin-top:6px"><b style="color:${lit?"var(--blue)":"var(--text)"}">${b.name} ${b.pct}%</b> <span style="color:${lit?"var(--blue)":"var(--text2)"}">${sym} ${b.n}/${b.of}</span>
+      <div class="tiny" style="line-height:1.6">${Object.entries(b.conds).map(([k,v])=>`${esc(k)} ${mk(v)}`).join("｜")}</div></div>`}).join("");
+  const lit=T.batches.filter(b=>b.n>=T.need).map(b=>b.name);
+  const now=lit.length?`可人工檢視：<b>${lit.join("、")}</b>${lit.length>1?"（急殺時可能同時到位）":""}`:"尚未達任何一批的提示條件";
+  const ep=T.ep_max&&T.ep_max>T.reach?`・本輪最高：${zh[T.ep_max]}`:"";
+  return `<div class="sep" style="font-size:13px"><b>大盤 ETF 三角分批</b> <span class="muted">（課程 3-3 範例條件，需人工確認）</span>${rows}
+    <div style="margin-top:8px;font-size:14px;color:var(--blue)">→ ${now}${ep}</div></div>`;
+}
 function lightsCard(t){
   const L=t.lights; if(!L)return "";
   const rows=["定位","位置","壓力","情緒","外部"].map(k=>{const v=L.lamps[k];
@@ -271,10 +288,12 @@ function lightsCard(t){
   const help=`<details class="help"><summary><span>燈號怎麼看</span><span class="chev">▶</span></summary><dl>
     <dt>冰水燈是什麼</dt><dd>來自「非常態投資學」課程 3-1 的市場氛圍儀表板，專門判斷左側非常態（冰水區）。和上方分數並列：分數看溫度，燈號看訊號亮了幾格。亮 1～2 格提高警覺，亮 3 格以上才是冰水區的強烈訊號。</dd>
     ${Object.entries(LAMP_RULE).map(([k,v])=>`<dt>${k}</dt><dd>${v}</dd>`).join("")}
-    <dt>急殺型 vs 緩跌型</dt><dd>急殺型（黑天鵝）：VIX ≥ 40、分數 10 日內急升 30 或跌停爆量，底部清楚，考驗信心。緩跌型（灰犀牛）：均線全部下彎但 VIX 一直在 35 以下，沒有明確恐慌極點，考驗耐心。</dd></dl></details>`;
+    <dt>急殺型 vs 緩跌型</dt><dd>急殺型（黑天鵝）：VIX ≥ 40、分數 10 日內急升 30 或跌停爆量，底部清楚，考驗信心。緩跌型（灰犀牛）：均線全部下彎但 VIX 一直在 35 以下，沒有明確恐慌極點，考驗耐心。</dd>
+    <dt>大盤 ETF 三角分批</dt><dd>課程 3-3：只用於廣泛指數 ETF，三批 20%／30%／50%，越極端投入越多。條件是作者的範例，作者明說可隨環境調整、不必依序出現，也沒有固定間隔天數；緩跌行情 VIX 可能不會達標，改看均線與燈號。</dd>
+    <dt>使用者定規（非作者原文）</dt><dd>同一批範例條件達 2 項就提示「可人工檢視」；短期跌幅＝距一年高點的跌幅；融資門檻用本專案口徑（課程 140%→144%、135%→139%）；10 年線因資料不足不列入。冰水燈回到常態而第三批沒觸發時，只顯示「資金待決」，不提示追價。</dd></dl></details>`;
   return `<div class="card"><div class="row"><span class="h">冰水燈・亮 ${L.n} / 5</span><span class="pill lv-${L.level}">${L.level}</span></div>
     ${L.type?`<div style="font-size:13px;margin-top:4px;color:var(--blue);font-weight:600">${L.type}</div>`:""}
-    <div class="lamps">${rows}</div>
+    <div class="lamps">${rows}</div>${triBlock(L)}
     <div class="sep" style="font-size:14px;line-height:1.7">${esc(lampHint(L))}</div>${help}</div>`;
 }
 
