@@ -1,13 +1,13 @@
 {
- "updated": "2026-11-06 04:51",
- "next_due": "202611060843",
+ "updated": "2026-11-06 07:44",
+ "next_due": "202611062243",
  "tw_date": "2026-11-05",
- "us_date": "2026-11-04",
+ "us_date": "2026-11-05",
  "tw_score": 88,
  "tw_zone": "特賣會",
- "us_score": 51,
- "us_zone": "原價",
- "quadrant": "本土事件",
+ "us_score": 70,
+ "us_zone": "開始打折",
+ "quadrant": "系統性恐慌",
  "tw_exit": false,
  "tw_lights": "常態",
  "tw_lights_n": 0,
@@ -17,11 +17,15 @@
  "stale": [],
  "anomalies": [],
  "tw_heat": false,
- "us_heat": false,
+ "us_heat": true,
  "tw_heat_date": null,
- "us_heat_date": "2026-10-16",
- "events": [],
- "summary": "台股 88 特賣會｜美股 51 原價｜本土事件",
- "title": "本土事件｜台股 88・美股 51",
- "body": ""
+ "us_heat_date": "2026-11-05",
+ "events": [
+  "美股原價→開始打折",
+  "狀態→系統性恐慌",
+  "美股升溫：5日+19"
+ ],
+ "summary": "台股 88 特賣會｜美股 70 開始打折｜系統性恐慌",
+ "title": "系統性恐慌｜台股 88・美股 70",
+ "body": "美股原價→開始打折，狀態→系統性恐慌，美股升溫：5日+19"
 }
