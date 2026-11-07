@@ -1,5 +1,5 @@
 {
- "updated": "2026-11-07 11:15",
+ "updated": "2026-11-07 19:50",
  "next_due": "202611092243",
  "tw_date": "2026-11-06",
  "us_date": "2026-11-06",
@@ -9,10 +9,10 @@
  "us_zone": "開始打折",
  "quadrant": "系統性恐慌",
  "tw_exit": false,
- "tw_lights": "常態",
- "tw_lights_n": 0,
- "tw_tri_start": null,
- "tw_tri_max": null,
+ "tw_lights": "警覺",
+ "tw_lights_n": 1,
+ "tw_tri_start": "2026-11-06",
+ "tw_tri_max": 0,
  "us_exit": false,
  "stale": [],
  "anomalies": [],
@@ -20,8 +20,10 @@
  "us_heat": false,
  "tw_heat_date": null,
  "us_heat_date": "2026-11-05",
- "events": [],
+ "events": [
+  "冰水燈常態→警覺（亮 1 格）"
+ ],
  "summary": "台股 94 特賣會｜美股 67 開始打折｜系統性恐慌",
  "title": "系統性恐慌｜台股 94・美股 67",
- "body": ""
+ "body": "冰水燈常態→警覺（亮 1 格）"
 }
